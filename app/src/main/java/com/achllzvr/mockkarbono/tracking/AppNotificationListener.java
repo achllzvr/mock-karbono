@@ -17,6 +17,7 @@ public class AppNotificationListener extends NotificationListenerService {
         long ts = System.currentTimeMillis();
         String category = categorizePackage(pkg);
         double kgCO2 = estimateNotificationCO2(category);
+        Log.d("(DEBUG) AppNotificationListener", "Received notification: " + pkg + " - " + category + " - " + kgCO2);
 
         NotificationEvent evt = new NotificationEvent();
         evt.packageName = pkg;
@@ -28,7 +29,7 @@ public class AppNotificationListener extends NotificationListenerService {
         Executors.newSingleThreadExecutor().execute(() -> {
             AppDatabase db = AppDatabase.getInstance(getApplicationContext());
             db.notificationEventDao().insert(evt);
-            Log.d("AppNotificationListener", "Notification event saved: " + evt.toString());
+            Log.d("(DEBUG) AppNotificationListener", "Inserted notification event: " + evt);
         });
     }
 

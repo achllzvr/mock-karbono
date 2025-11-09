@@ -36,7 +36,7 @@ public class ScreenReceiver extends BroadcastReceiver {
 
                 Executors.newSingleThreadExecutor().execute(() -> {
                     AppDatabase.getInstance(context).appUsageDao().insert(usage);
-                    Log.d("ScreenReceiver", "Usage saved: " + usage);
+                    Log.d("(DEBUG) ScreenReceiver", "Inserted usage: " + usage);
                 });
             }
         }

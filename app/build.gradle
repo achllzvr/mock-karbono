@@ -87,6 +87,9 @@ dependencies {
     // Firebase (Analytics)
     implementation 'com.google.firebase:firebase-analytics'
 
+    // irebase (Firestore)
+    implementation 'com.google.firebase:firebase-firestore'
+
     /* Retrofit & OkHttp (optional - for future backend)
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.okhttp3:okhttp:4.11.0'

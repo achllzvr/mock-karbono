@@ -1,6 +1,7 @@
 package com.achllzvr.mockkarbono.db;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.room.Database;
 import androidx.room.Room;
@@ -29,6 +30,7 @@ public abstract class AppDatabase extends RoomDatabase {
         if (instance == null) {
             synchronized (AppDatabase.class) {
                 if (instance == null) {
+                    Log.d("(DEBUG) AppDatabase", "Creating new database instance");
                     instance = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, DB_NAME)
                             .fallbackToDestructiveMigration()
