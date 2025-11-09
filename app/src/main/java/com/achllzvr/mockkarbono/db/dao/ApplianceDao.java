@@ -21,6 +21,6 @@ public interface ApplianceDao {
     @Query("SELECT * FROM appliance_log WHERE synced = 0")
     List<ApplianceLog> getUnsynced();
 
-    @Query("DELETE FROM appliance_log WHERE synced = 1 AND endTimeMs < :cutoffMs")
-    void deleteSyncedOlderThan(long cutoffMs);
+    @Query("DELETE FROM appliance_log WHERE synced = 1")
+    void deleteSynced();
 }

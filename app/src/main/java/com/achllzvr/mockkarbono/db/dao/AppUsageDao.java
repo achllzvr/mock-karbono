@@ -20,6 +20,7 @@ public interface AppUsageDao {
     @Query("SELECT * FROM app_usage WHERE synced = 0")
     List<AppUsage> getUnsynced();
 
+    // Deletes synced app usage records older than the provided cutoff (uses endTimeMs field).
     @Query("DELETE FROM app_usage WHERE synced = 1 AND endTimeMs < :cutoffMs")
     void deleteSyncedOlderThan(long cutoffMs);
 }

@@ -21,6 +21,7 @@ public interface NotificationEventDao {
     @Query("SELECT * FROM notification_event WHERE synced = 0")
     List<NotificationEvent> getUnsynced();
 
-    @Query("DELETE FROM notification_event WHERE synced = 1 AND timeMs < :cutoffMs")
+    // Deletes synced notification events older than the provided cutoff (uses timestampMs field).
+    @Query("DELETE FROM notification_event WHERE synced = 1 AND timestampMs < :cutoffMs")
     void deleteSyncedOlderThan(long cutoffMs);
 }
