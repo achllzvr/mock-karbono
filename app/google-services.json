@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "442469572927",
+    "project_id": "karbono-mock",
+    "storage_bucket": "karbono-mock.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442469572927:android:7978f216ce1709cfbe338a",
+        "android_client_info": {
+          "package_name": "com.achllzvr.mockkarbono"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-7T5_AcyqNFsnu4MbJac5Q_bObj-l0r4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
