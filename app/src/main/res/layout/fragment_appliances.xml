@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Full Appliances list page with Add/Edit capability -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- Header with total carbon -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/appliancesTotalCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_large"
+            app:cardBackgroundColor="@color/colorSurface"
+            app:cardElevation="@dimen/card_elevation"
+            app:cardCornerRadius="@dimen/card_corner_radius">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/spacing_large"
+                android:gravity="center_vertical">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/total_appliances_today"
+                        android:textSize="14sp"
+                        android:textColor="@color/colorCarbonGray"
+                        android:fontFamily="sans-serif" />
+
+                    <TextView
+                        android:id="@+id/tvAppliancesTotalCarbon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.45 kg CO₂"
+                        android:textSize="28sp"
+                        android:textColor="@color/colorOnBackground"
+                        android:fontFamily="sans-serif-light"
+                        android:layout_marginTop="@dimen/spacing_tiny" />
+
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_appliance"
+                    android:contentDescription="@string/appliances_icon"
+                    app:tint="@color/colorAccent" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Appliances list section title -->
+        <TextView
+            android:id="@+id/tvAppliancesListTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/all_appliances"
+            android:textSize="18sp"
+            android:textColor="@color/colorOnBackground"
+            android:fontFamily="sans-serif-medium"
+            android:layout_marginHorizontal="@dimen/spacing_large"
+            android:layout_marginBottom="@dimen/spacing_medium" />
+
+        <!-- Appliances RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAllAppliances"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingHorizontal="@dimen/spacing_large"
+            android:paddingBottom="@dimen/spacing_large"
+            android:clipToPadding="false"
+            android:scrollbars="vertical" />
+
+        <!-- Empty state -->
+        <include
+            layout="@layout/layout_empty_state"
+            android:id="@+id/emptyStateAppliances"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <!-- FAB to add appliance -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabAddApplianceFull"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/spacing_large"
+        android:contentDescription="@string/add_appliance"
+        app:srcCompat="@drawable/ic_add"
+        app:tint="@color/colorOnBackground"
+        app:backgroundTint="@color/colorAccent" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

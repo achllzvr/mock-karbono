@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,12 +22,18 @@ import androidx.work.WorkManager;
 
 import com.achllzvr.mockkarbono.db.entities.AppUsage;
 import com.achllzvr.mockkarbono.db.entities.NotificationEvent;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.achllzvr.mockkarbono.ui.AppUsageAdapter;
 import com.achllzvr.mockkarbono.ui.AppUsageViewModel;
+import com.achllzvr.mockkarbono.ui.fragments.DashboardFragment;
+import com.achllzvr.mockkarbono.ui.fragments.TrackFragment;
+import com.achllzvr.mockkarbono.ui.fragments.AppliancesFragment;
+import com.achllzvr.mockkarbono.ui.fragments.SyncSettingsFragment;
 import com.achllzvr.mockkarbono.tracking.SyncWorker;
 import com.achllzvr.mockkarbono.tracking.ScreenReceiver;
 import com.achllzvr.mockkarbono.db.AppDatabase;
+import com.achllzvr.mockkarbono.utils.PermissionHelper;
 
 import java.util.UUID;
 import java.util.concurrent.Executors;
@@ -55,91 +62,49 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-        Button btnUsage = findViewById(R.id.btnUsageAccess);
-        Button btnNotif = findViewById(R.id.btnNotifAccess);
-        Button btnForceSync = findViewById(R.id.btnForceSync);
-        Button btnShowCounts = findViewById(R.id.btnShowCounts);
-        txtUnsynced = findViewById(R.id.txtUnsynced);
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
+        bottomNav.setOnItemSelectedListener(item -> {
+            Fragment fragment = null;
+            int itemId = item.getItemId();
 
-        btnUsage.setOnClickListener(v -> {
-            Log.d("(DEBUG) " +TAG, "Usage access button clicked");
-            startActivity(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS));
+            if (itemId == R.id.navigation_dashboard) {
+                fragment = new DashboardFragment();
+            } else if (itemId == R.id.navigation_track) {
+                fragment = new TrackFragment();
+            } else if (itemId == R.id.navigation_appliances) {
+                fragment = new AppliancesFragment();
+            } else if (itemId == R.id.navigation_settings) {
+                fragment = new SyncSettingsFragment();
+            }
+
+            if (fragment != null) {
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragmentContainer, fragment)
+                        .commit();
+            }
+            return true;
         });
 
-        btnNotif.setOnClickListener(v -> {
-            Log.d("(DEBUG) " +TAG, "Notification access button clicked");
-            startActivity(new Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS));
-        });
+        // Load default fragment (Dashboard)
+        if (savedInstanceState == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragmentContainer, new DashboardFragment())
+                    .commit();
+        }
 
-        btnForceSync.setOnClickListener(v -> {
-            OneTimeWorkRequest req = new OneTimeWorkRequest.Builder(SyncWorker.class).build();
-            WorkManager.getInstance(this).enqueue(req);
-            Log.d("(DEBUG) " +TAG, "Manual sync enqueued");
-            Toast.makeText(this, "Sync started", Toast.LENGTH_SHORT).show();
-        });
+        // Check permissions on startup
+        checkAndRequestPermissions();
+    }
 
-        btnShowCounts.setOnClickListener(v -> {
-            Executors.newSingleThreadExecutor().execute(() -> {
-                int u = AppDatabase.getInstance(getApplicationContext()).appUsageDao().countUnsynced();
-                int n = AppDatabase.getInstance(getApplicationContext()).notificationEventDao().countUnsynced();
-                int a = AppDatabase.getInstance(getApplicationContext()).applianceDao().countUnsynced();
-                runOnUiThread(() -> {
-                    String text = "Unsynced: usage=" + u + " notifs=" + n + " appliances=" + a;
-                    txtUnsynced.setText(text);
-                    Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-                    Log.d("(DEBUG) " +TAG, text);
-                });
-            });
-        });
-
-        // inside onCreate, wire a btnSimulate
-        Button btnSimulate = findViewById(R.id.btnSimulate); // add a button in layout
-        btnSimulate.setOnClickListener(v -> {
-            Executors.newSingleThreadExecutor().execute(() -> {
-                try {
-                    AppUsage u = new AppUsage();
-                    u.uuid = UUID.randomUUID().toString();
-                    u.packageName = "com.test.fake";
-                    u.category = "test";
-                    u.startTimeMs = System.currentTimeMillis() - 60000;
-                    u.endTimeMs = System.currentTimeMillis();
-                    u.durationMs = 60000;
-                    u.estimatedWh = 5.0 * (1.0/60.0);
-                    u.estimatedKgCO2 = (u.estimatedWh / 1000.0) * 0.8;
-                    u.clientCreatedAtMs = System.currentTimeMillis();
-                    u.synced = false;
-                    long id = AppDatabase.getInstance(getApplicationContext()).appUsageDao().insert(u);
-                    Log.d("KarbonoDebug", "Simulated AppUsage inserted id=" + id + " uuid=" + u.uuid);
-
-                    NotificationEvent n = new NotificationEvent();
-                    n.uuid = UUID.randomUUID().toString();
-                    n.packageName = "com.test.fake";
-                    n.category = "test";
-                    n.timestampMs = System.currentTimeMillis();
-                    n.estimatedKgCO2 = 0.0001;
-                    n.clientCreatedAtMs = System.currentTimeMillis();
-                    n.synced = false;
-                    long nid = AppDatabase.getInstance(getApplicationContext()).notificationEventDao().insert(n);
-                    Log.d("KarbonoDebug", "Simulated NotificationEvent inserted id=" + nid + " uuid=" + n.uuid);
-
-                    int ucount = AppDatabase.getInstance(getApplicationContext()).appUsageDao().countUnsynced();
-                    int ncount = AppDatabase.getInstance(getApplicationContext()).notificationEventDao().countUnsynced();
-                    Log.d("KarbonoDebug", "After simulate unsynced counts usage=" + ucount + " notifs=" + ncount);
-                } catch (Exception e) {
-                    Log.e("KarbonoDebug", "Simulation insert failed", e);
-                }
-            });
-        });
-
-        // RecyclerView + adapter + ViewModel
-        RecyclerView rv = findViewById(R.id.recycler);
-        adapter = new AppUsageAdapter();
-        rv.setAdapter(adapter);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        vm = new ViewModelProvider(this).get(AppUsageViewModel.class);
-        vm.getList().observe(this, list -> {
-            adapter.setItems(list);
-        });
+    private void checkAndRequestPermissions() {
+        // Delay permission check to not interrupt app startup
+        new android.os.Handler().postDelayed(() -> {
+            if (!PermissionHelper.hasAllPermissions(this)) {
+                PermissionHelper.requestAllPermissions(this);
+            }
+        }, 2000);
     }
 
     @Override

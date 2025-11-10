@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.chip.Chip
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/chipSyncStatus"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Synced"
+    android:textColor="@color/colorOnBackground"
+    android:textSize="12sp"
+    app:chipBackgroundColor="@color/colorSurfaceVariant"
+    app:chipIcon="@drawable/ic_sync"
+    app:chipIconTint="@color/colorAccent"
+    app:chipCornerRadius="16dp"
+    app:chipMinHeight="32dp" />

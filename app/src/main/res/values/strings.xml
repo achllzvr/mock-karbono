@@ -1,3 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">MockKarbono</string>
+    <!-- App name -->
+    <string name="app_name">Mock Karbono</string>
+
+    <!-- Navigation -->
+    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_track">Track</string>
+    <string name="nav_appliances">Appliances</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Dashboard -->
+    <string name="today_total">Today\'s Total</string>
+    <string name="kg_co2">kg CO₂</string>
+    <string name="safe_range_label">Within safe range (0.9 kg/day)</string>
+    <string name="breakdown_title">Breakdown</string>
+    <string name="streak_value_sample">4 days in safe range</string>
+    <string name="streak_label">days in safe range</string>
+    <string name="quick_actions">Quick Actions</string>
+    <string name="force_sync">Force Sync</string>
+    <string name="view_details">View details</string>
+
+    <!-- Track tabs -->
+    <string name="tab_live">Live</string>
+    <string name="tab_notifications">Notifications</string>
+    <string name="tab_appliances">Appliances</string>
+
+    <!-- Live tracking -->
+    <string name="screen_on_today">Screen On Today</string>
+    <string name="screen_carbon_sample">≈ 0.18 kg CO₂</string>
+    <string name="tracking_settings">Tracking Settings</string>
+    <string name="track_app_usage">Track app usage</string>
+    <string name="track_notifications">Track notifications</string>
+    <string name="top_apps_today">Top Apps Today</string>
+    <string name="view_all">View All</string>
+
+    <!-- Notifications -->
+    <string name="search_notifications">Search notifications…</string>
+    <string name="notifications_today">notifications today</string>
+    <string name="recent_notifications">Recent Notifications</string>
+
+    <!-- Appliances -->
+    <string name="appliances_today">Appliances Today</string>
+    <string name="appliances_count_sample">2 active appliances</string>
+    <string name="active_appliances">Active Appliances</string>
+    <string name="view_all_appliances">View All Appliances</string>
+    <string name="add_appliance">Add appliance</string>
+    <string name="total_appliances_today">Total Appliances Today</string>
+    <string name="all_appliances">All Appliances</string>
+
+    <!-- Add appliance dialog -->
+    <string name="add_appliance_title">Add Appliance</string>
+    <string name="appliance_name_hint">Appliance name</string>
+    <string name="daily_hours_hint">Daily usage hours</string>
+    <string name="hours_per_day">hrs/day</string>
+    <string name="power_consumption_hint">Power consumption</string>
+    <string name="watts">W</string>
+    <string name="estimated_impact_placeholder">Estimated: ~0.00 kg CO₂/day</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+
+    <!-- Sync & Settings -->
+    <string name="sync_title">Sync</string>
+    <string name="firestore_sync">Firestore Sync</string>
+    <string name="last_synced_sample">Last synced: 14:45</string>
+    <string name="auto_sync">Auto-sync</string>
+    <string name="sync_now">Sync Now</string>
+    <string name="settings_title">Settings</string>
+    <string name="daily_safe_range">Daily Safe Range</string>
+    <string name="safe_range_value">0.9 kg CO₂/day</string>
+    <string name="safe_range_description">Your personal carbon budget for sustainable usage</string>
+    <string name="daily_reminders">Daily reminders</string>
+    <string name="about_title">About</string>
+    <string name="app_version">Version 1.0.0</string>
+
+    <!-- Sync status -->
+    <string name="sync_status_offline">Offline</string>
+    <string name="sync_status_syncing">Syncing…</string>
+    <string name="sync_status_synced">Last synced: %s</string>
+
+    <!-- Empty states -->
+    <string name="empty_state_title">Nothing to see here</string>
+    <string name="empty_state_description">Start tracking to see your data</string>
+    <string name="empty_appliances_title">No appliances yet</string>
+    <string name="empty_appliances_description">Add your first appliance to start tracking</string>
+    <string name="empty_notifications_title">No notifications</string>
+    <string name="empty_notifications_description">Your notification history will appear here</string>
+
+    <!-- Content descriptions (accessibility) -->
+    <string name="screen_time_icon">Screen time icon</string>
+    <string name="streak_icon">Streak icon</string>
+    <string name="metric_icon">Metric icon</string>
+    <string name="app_icon">App icon</string>
+    <string name="notification_icon">Notification icon</string>
+    <string name="appliances_icon">Appliances icon</string>
+    <string name="firestore_icon">Firestore icon</string>
+    <string name="progress_ring">Progress ring</string>
+    <string name="chart_icon">Chart</string>
+    <string name="empty_state_icon">Empty state</string>
+
+    <!-- Error messages -->
+    <string name="error_sync_failed">Sync failed. Please try again.</string>
+    <string name="error_invalid_input">Please enter valid values</string>
+    <string name="error_network">Network error. Check your connection.</string>
+
+    <!-- Success messages -->
+    <string name="success_appliance_added">Appliance added successfully</string>
+    <string name="success_sync_complete">Sync complete</string>
 </resources>

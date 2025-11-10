@@ -38,7 +38,7 @@ public class AppUsageAdapter extends RecyclerView.Adapter<AppUsageAdapter.VH> {
         holder.pkg.setText(u.packageName);
         holder.duration.setText(formatDuration(u.durationMs));
         holder.ts.setText(android.text.format.DateFormat.format("MM-dd HH:mm", u.clientCreatedAtMs));
-        holder.syncedBadge.setImageResource(u.synced ? R.drawable.ic_synced : R.drawable.ic_unsynced);
+        holder.syncedBadge.setImageResource(u.synced ? R.drawable.ic_sync : R.drawable.ic_unsynced);
     }
 
     @Override

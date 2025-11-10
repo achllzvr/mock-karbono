@@ -1,81 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:padding="12dp"
+<!-- Main activity scaffold: TopAppBar + Fragment container + BottomNavigationView -->
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground">
 
-    <TextView
-        android:id="@+id/txtInfo"
+    <!-- Top App Bar with sync status chip -->
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/topAppBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Karbono — local and cloud sync demo"
-        android:textStyle="bold"
-        android:paddingBottom="8dp"/>
+        android:background="@color/colorBackground"
+        android:elevation="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <TextView
-        android:id="@+id/txtUnsynced"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Unsynced: -" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp">
-
-        <Button
-            android:id="@+id/btnUsageAccess"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <TextView
+            android:id="@+id/toolbarTitle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Usage Access" />
+            android:text="@string/app_name"
+            android:textSize="22sp"
+            android:textColor="@color/colorOnBackground"
+            android:fontFamily="sans-serif-medium"
+            android:layout_gravity="start" />
 
-        <Button
-            android:id="@+id/btnNotifAccess"
-            android:layout_width="0dp"
-            android:layout_weight="1"
+        <!-- Sync status chip - dynamically updated -->
+        <include
+            layout="@layout/component_sync_chip"
+            android:id="@+id/syncChip"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Notif Access"
-            android:layout_marginStart="8dp"/>
-    </LinearLayout>
+            android:layout_gravity="end"
+            android:layout_marginEnd="@dimen/spacing_medium" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="8dp">
+    </com.google.android.material.appbar.MaterialToolbar>
 
-        <Button
-            android:id="@+id/btnForceSync"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Force Sync" />
-
-        <Button
-            android:id="@+id/btnShowCounts"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Show Counts"
-            android:layout_marginStart="8dp"/>
-
-        <Button
-            android:id="@+id/btnSimulate"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Simulate"
-            android:layout_marginStart="8dp"/>
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler"
-        android:layout_width="match_parent"
+    <!-- Fragment container for navigation -->
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginTop="12dp" />
+        app:layout_constraintTop_toBottomOf="@id/topAppBar"
+        app:layout_constraintBottom_toTopOf="@id/bottomNavigation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-</LinearLayout>
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorSurface"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_navigation_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

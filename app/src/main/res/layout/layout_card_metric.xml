@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Reusable metric card: title, value, small sparkline placeholder -->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/colorSurface"
+    app:cardElevation="@dimen/card_elevation"
+    app:cardCornerRadius="@dimen/card_corner_radius">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_large"
+        android:gravity="center_vertical">
+
+        <!-- Icon (dynamically set based on metric type) -->
+        <ImageView
+            android:id="@+id/ivMetricIcon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_phone"
+            android:contentDescription="@string/metric_icon"
+            app:tint="@color/colorAccent" />
+
+        <!-- Metric details -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="@dimen/spacing_medium">
+
+            <TextView
+                android:id="@+id/tvMetricTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Phone"
+                android:textSize="14sp"
+                android:textColor="@color/colorCarbonGray"
+                android:fontFamily="sans-serif" />
+
+            <TextView
+                android:id="@+id/tvMetricValue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0.18 kg"
+                android:textSize="22sp"
+                android:textColor="@color/colorOnBackground"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginTop="@dimen/spacing_tiny" />
+
+        </LinearLayout>
+
+        <!-- Mini sparkline/chart placeholder (optional) -->
+        <include
+            layout="@layout/layout_chart_placeholder"
+            android:id="@+id/chartMini"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_marginStart="@dimen/spacing_medium" />
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>
