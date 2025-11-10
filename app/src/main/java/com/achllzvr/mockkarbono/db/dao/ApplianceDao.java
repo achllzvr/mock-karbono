@@ -18,9 +18,15 @@ public interface ApplianceDao {
     @Update
     void update(ApplianceLog log);
 
-    @Query("SELECT * FROM appliance_log WHERE synced = 0")
+    @Query("SELECT * FROM appliance_log ORDER BY clientCreatedAtMs DESC")
+    List<ApplianceLog> getAll();
+
+    @Query("SELECT * FROM appliance_log WHERE synced = 0 ORDER BY clientCreatedAtMs ASC")
     List<ApplianceLog> getUnsynced();
 
-    @Query("DELETE FROM appliance_log WHERE synced = 1")
-    void deleteSynced();
+    @Query("UPDATE appliance_log SET synced = 1 WHERE uuid IN(:uuids)")
+    void markSyncedByUuid(List<String> uuids);
+
+    @Query("SELECT COUNT(*) FROM appliance_log WHERE synced = 0")
+    int countUnsynced();
 }

@@ -9,8 +9,11 @@ public class DailySummary {
     @PrimaryKey
     @NonNull
     public String date; // e.g., "2025-11-09"
+    public String uuid;
     public double phoneKgCO2;
     public double applianceKgCO2;
     public double totalKgCO2;
+    public long clientCreatedAtMs;
     public boolean synced;
+
 }

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/txtPkg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="com.example.app"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txtDuration"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0m 0s" />
+
+        <TextView
+            android:id="@+id/txtTs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="11-10 03:34" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imgSynced"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:contentDescription="synced badge"
+        android:src="@drawable/ic_unsynced" />
+
+</LinearLayout>

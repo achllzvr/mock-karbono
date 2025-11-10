@@ -7,6 +7,7 @@ import androidx.room.PrimaryKey;
 public class AppUsage {
     @PrimaryKey(autoGenerate = true)
     public long id;
+    public String uuid; // client-generated unique id (UUID string)
     public String packageName;
     public String category; // e.g., social, video, screen
     public long startTimeMs;
@@ -14,5 +15,6 @@ public class AppUsage {
     public long durationMs;
     public double estimatedWh;
     public double estimatedKgCO2;
+    public long clientCreatedAtMs; // when the event was created on device
     public boolean synced;
 }

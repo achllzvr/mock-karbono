@@ -12,6 +12,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import com.achllzvr.mockkarbono.tracking.SyncWorker;
 import com.achllzvr.mockkarbono.tracking.UsageQueryWorker;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
 import java.util.concurrent.TimeUnit;
 
@@ -22,6 +24,13 @@ public class App extends Application {
         // Anonymous sign-in (for demo)
         FirebaseAuth.getInstance().signInAnonymously();
         Log.d("(DEBUG) Firebase Auth", "Signed in anonymously");
+
+        FirebaseFirestore fs = FirebaseFirestore.getInstance();
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        fs.setFirestoreSettings(settings);
+        Log.d("(DEBUG) Firestore", "Enabled persistence");
 
         // Schedule periodic workers
         PeriodicWorkRequest usageReq = new PeriodicWorkRequest.Builder(UsageQueryWorker.class, 15, TimeUnit.MINUTES)

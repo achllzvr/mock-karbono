@@ -15,6 +15,9 @@ import com.achllzvr.mockkarbono.db.entities.AppUsage;
 import com.achllzvr.mockkarbono.db.entities.NotificationEvent;
 import com.achllzvr.mockkarbono.db.entities.ApplianceLog;
 import com.achllzvr.mockkarbono.db.entities.DailySummary;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.Executors;
 
 @Database(entities = {AppUsage.class, NotificationEvent.class, ApplianceLog.class, DailySummary.class}, version = 1, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
@@ -34,6 +37,9 @@ public abstract class AppDatabase extends RoomDatabase {
                     instance = Room.databaseBuilder(context.getApplicationContext(),
                                     AppDatabase.class, DB_NAME)
                             .fallbackToDestructiveMigration()
+                            .setQueryCallback((sqlQuery, bindArgs) -> {
+                                Log.d("(DEBUG) AppDatabase", "Room SQL: " + sqlQuery + " args=" + bindArgs.toString());
+                            }, Executors.newSingleThreadExecutor())
                             .build();
                 }
             }

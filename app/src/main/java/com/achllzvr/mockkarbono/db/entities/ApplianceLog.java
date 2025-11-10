@@ -7,9 +7,12 @@ import androidx.room.PrimaryKey;
 public class ApplianceLog {
     @PrimaryKey(autoGenerate = true)
     public long id;
+    public String uuid;
     public String name;
     public int typicalWattage;
     public double hoursPerDay;
     public double estimatedKgCO2PerDay;
+    public long clientCreatedAtMs;
     public boolean synced;
+
 }

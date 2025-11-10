@@ -18,11 +18,15 @@ public interface DailySummaryDao {
     @Update
     void update(DailySummary summary);
 
-    @Query("SELECT * FROM daily_summary WHERE synced = 0")
+    @Query("SELECT * FROM daily_summary ORDER BY date DESC")
+    List<DailySummary> getAll();
+
+    @Query("SELECT * FROM daily_summary WHERE synced = 0 ORDER BY clientCreatedAtMs ASC")
     List<DailySummary> getUnsynced();
 
-    // `DailySummary.date` is a string like "2025-11-09". Delete synced summaries older than the
-    // provided cutoffDate (lexicographic comparison on ISO-8601 date strings works correctly).
-    @Query("DELETE FROM daily_summary WHERE synced = 1 AND date < :cutoffDate")
-    void deleteSyncedOlderThan(String cutoffDate);
+    @Query("UPDATE daily_summary SET synced = 1 WHERE date IN(:dates)")
+    void markSyncedByDate(List<String> dates);
+
+    @Query("SELECT COUNT(*) FROM daily_summary WHERE synced = 0")
+    int countUnsynced();
 }

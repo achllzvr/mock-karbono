@@ -1,5 +1,6 @@
 package com.achllzvr.mockkarbono.db.dao;
 
+import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.Query;
@@ -17,10 +18,18 @@ public interface AppUsageDao {
     @Update
     void update(AppUsage usage);
 
-    @Query("SELECT * FROM app_usage WHERE synced = 0")
+    @Query("SELECT * FROM app_usage WHERE synced = 0 ORDER BY clientCreatedAtMs ASC")
     List<AppUsage> getUnsynced();
 
-    // Deletes synced app usage records older than the provided cutoff (uses endTimeMs field).
-    @Query("DELETE FROM app_usage WHERE synced = 1 AND endTimeMs < :cutoffMs")
-    void deleteSyncedOlderThan(long cutoffMs);
+    @Query("SELECT * FROM app_usage ORDER BY clientCreatedAtMs DESC LIMIT :limit")
+    List<AppUsage> getLatest(int limit);
+
+    @Query("SELECT * FROM app_usage ORDER BY clientCreatedAtMs DESC")
+    LiveData<List<AppUsage>> observeAll();
+
+    @Query("UPDATE app_usage SET synced = 1 WHERE uuid IN(:uuids)")
+    void markSyncedByUuid(List<String> uuids);
+
+    @Query("SELECT COUNT(*) FROM app_usage WHERE synced = 0")
+    int countUnsynced();
 }
