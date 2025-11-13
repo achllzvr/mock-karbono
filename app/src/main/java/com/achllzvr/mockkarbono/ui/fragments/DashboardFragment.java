@@ -142,8 +142,8 @@ public class DashboardFragment extends Fragment {
             // Calculate streak
             int streak = calculateStreak();
 
-            // Safe range check (0.9 kg/day)
-            double safeRange = 0.9;
+            // Safe range check (6.8 kg/day)
+            double safeRange = 6.8;
             boolean withinSafeRange = totalCO2 <= safeRange;
             float progress = (float) (totalCO2 / safeRange);
 
@@ -232,7 +232,7 @@ public class DashboardFragment extends Fragment {
             weekStart.add(Calendar.DAY_OF_MONTH, -daysFromSunday);
 
             // Safe range per day
-            double safeRange = 0.9;
+            double safeRange = 6.8;
 
             // Get data for each day of the week
             for (int i = 0; i < 7; i++) {
@@ -318,7 +318,7 @@ public class DashboardFragment extends Fragment {
 
     private int calculateStreak() {
         // Calculate streak by checking consecutive days within safe range
-        double safeRange = 0.9; // kg CO2 per day
+        double safeRange = 6.8; // kg CO2 per day
         int streak = 0;
 
         Calendar calendar = Calendar.getInstance();

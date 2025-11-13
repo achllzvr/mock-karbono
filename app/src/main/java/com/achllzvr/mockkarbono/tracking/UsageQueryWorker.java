@@ -34,9 +34,22 @@ public class UsageQueryWorker extends Worker {
         if (stats == null) return Result.success();
         Log.d("(DEBUG) UsageQueryWorker", "UsageQueryWorker: stats size=" + (stats != null ? stats.size() : 0));
 
+        // Get database instance
+        AppDatabase db = AppDatabase.getInstance(ctx);
+
         for (UsageStats st : stats) {
             long durationMs = st.getTotalTimeInForeground();
             if (durationMs <= 0) continue;
+
+            // Check if we already have a recent entry for this package to avoid duplicates
+            // Query for entries within last 20 minutes for this specific package
+            long twentyMinutesAgo = now - 20 * 60 * 1000;
+            AppUsage recentUsage = db.appUsageDao().getRecentByPackage(st.getPackageName(), twentyMinutesAgo);
+
+            if (recentUsage != null) {
+                Log.d("(DEBUG) UsageQueryWorker", "Skipping duplicate for " + st.getPackageName() + ", already recorded at " + recentUsage.clientCreatedAtMs);
+                continue;
+            }
 
             AppUsage usage = new AppUsage();
             usage.uuid = UUID.randomUUID().toString();
@@ -50,7 +63,7 @@ public class UsageQueryWorker extends Worker {
             usage.clientCreatedAtMs = System.currentTimeMillis();
             usage.synced = false;
 
-            AppDatabase.getInstance(ctx).appUsageDao().insert(usage);
+            db.appUsageDao().insert(usage);
             Log.d("(DEBUG) UsageQueryWorker", "Inserted AppUsage id=" + usage.uuid + " pkg=" + usage.packageName + " durMs=" + durationMs);
         }
         return Result.success();

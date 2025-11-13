@@ -11,8 +11,8 @@
 
     <!-- Dashboard -->
     <string name="today_total">Today\'s Total</string>
-    <string name="kg_co2">kg CO₂</string>
-    <string name="safe_range_label">Within safe range (0.9 kg/day)</string>
+    <string name="kg_co2">6.8 kg CO₂</string>
+    <string name="safe_range_label">Within safe range (6.8 kg/day)</string>
     <string name="breakdown_title">Breakdown</string>
     <string name="streak_value_sample">4 days in safe range</string>
     <string name="streak_label">days in safe range</string>

@@ -29,4 +29,7 @@ public interface ApplianceDao {
 
     @Query("SELECT COUNT(*) FROM appliance_log WHERE synced = 0")
     int countUnsynced();
+
+    @Query("DELETE FROM appliance_log WHERE uuid = :uuid")
+    void deleteByUuid(String uuid);
 }

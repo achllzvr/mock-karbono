@@ -32,4 +32,7 @@ public interface AppUsageDao {
 
     @Query("SELECT COUNT(*) FROM app_usage WHERE synced = 0")
     int countUnsynced();
+
+    @Query("SELECT * FROM app_usage WHERE packageName = :packageName AND clientCreatedAtMs > :afterTimestamp ORDER BY clientCreatedAtMs DESC LIMIT 1")
+    AppUsage getRecentByPackage(String packageName, long afterTimestamp);
 }

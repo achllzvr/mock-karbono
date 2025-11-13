@@ -159,6 +159,7 @@ public class AppliancesFragment extends Fragment {
                 appliance.typicalWattage = watts;
                 appliance.estimatedKgCO2PerDay = calculateCO2(hours, watts);
                 appliance.clientCreatedAtMs = System.currentTimeMillis();
+                // ALWAYS set synced to false (for both new and updated appliances)
                 appliance.synced = false;
 
                 saveAppliance(appliance, existingAppliance != null);
@@ -218,11 +219,14 @@ public class AppliancesFragment extends Fragment {
             .setMessage("Are you sure you want to delete " + appliance.name + "?")
             .setPositiveButton("Delete", (dialog, which) -> {
                 Executors.newSingleThreadExecutor().execute(() -> {
-                    // Room doesn't have delete by default, so we'll need to add it or use update
-                    // For now, we'll just reload (in production, add delete method to DAO)
+                    db.applianceDao().deleteByUuid(appliance.uuid);
+
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(() -> {
-                            android.widget.Toast.makeText(requireContext(), "Delete not implemented yet", android.widget.Toast.LENGTH_SHORT).show();
+                            android.widget.Toast.makeText(requireContext(),
+                                "Appliance deleted",
+                                android.widget.Toast.LENGTH_SHORT).show();
+                            loadAppliances();
                         });
                     }
                 });
