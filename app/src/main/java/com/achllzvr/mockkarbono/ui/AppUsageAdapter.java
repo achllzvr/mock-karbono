@@ -35,10 +35,9 @@ public class AppUsageAdapter extends RecyclerView.Adapter<AppUsageAdapter.VH> {
     @Override
     public void onBindViewHolder(@NonNull VH holder, int position) {
         AppUsage u = items.get(position);
-        holder.pkg.setText(u.packageName);
+        holder.appName.setText(u.packageName);
         holder.duration.setText(formatDuration(u.durationMs));
-        holder.ts.setText(android.text.format.DateFormat.format("MM-dd HH:mm", u.clientCreatedAtMs));
-        holder.syncedBadge.setImageResource(u.synced ? R.drawable.ic_sync : R.drawable.ic_unsynced);
+        holder.carbon.setText(String.format("%.4f kg", u.estimatedKgCO2));
     }
 
     @Override
@@ -54,14 +53,12 @@ public class AppUsageAdapter extends RecyclerView.Adapter<AppUsageAdapter.VH> {
     }
 
     static class VH extends RecyclerView.ViewHolder {
-        TextView pkg, duration, ts;
-        ImageView syncedBadge;
+        TextView appName, duration, carbon;
         VH(@NonNull View itemView) {
             super(itemView);
-            pkg = itemView.findViewById(R.id.txtPkg);
-            duration = itemView.findViewById(R.id.txtDuration);
-            ts = itemView.findViewById(R.id.txtTs);
-            syncedBadge = itemView.findViewById(R.id.imgSynced);
+            appName = itemView.findViewById(R.id.tvAppName);
+            duration = itemView.findViewById(R.id.tvDuration);
+            carbon = itemView.findViewById(R.id.tvCarbonValue);
         }
     }
 }

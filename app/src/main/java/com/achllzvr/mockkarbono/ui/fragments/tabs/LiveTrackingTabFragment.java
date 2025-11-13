@@ -14,15 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.achllzvr.mockkarbono.R;
-import com.achllzvr.mockkarbono.db.AppDatabase;
-import com.achllzvr.mockkarbono.db.entities.AppUsage;
-import com.achllzvr.mockkarbono.ui.AppUsageAdapter;
-import com.achllzvr.mockkarbono.ui.AppUsageViewModel;
+import com.achllzvr.mockkarbono.ui.appusage.AppUsageAdapter;
+import com.achllzvr.mockkarbono.ui.appusage.AppUsageViewModel;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
-import java.util.Calendar;
-import java.util.List;
-import java.util.concurrent.Executors;
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 public class LiveTrackingTabFragment extends Fragment {
@@ -32,15 +28,14 @@ public class LiveTrackingTabFragment extends Fragment {
     private SwitchMaterial switchAppUsage;
     private SwitchMaterial switchNotifications;
     private RecyclerView rvAppUsageList;
+    private View emptyState;
     private AppUsageAdapter adapter;
-    private AppDatabase db;
+    private AppUsageViewModel viewModel;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.layout_track_live, container, false);
-
-        db = AppDatabase.getInstance(requireContext());
 
         // Bind views
         tvScreenTime = view.findViewById(R.id.tvScreenTime);
@@ -48,15 +43,47 @@ public class LiveTrackingTabFragment extends Fragment {
         switchAppUsage = view.findViewById(R.id.switchAppUsage);
         switchNotifications = view.findViewById(R.id.switchNotifications);
         rvAppUsageList = view.findViewById(R.id.rvAppUsageList);
+        emptyState = view.findViewById(R.id.emptyState);
 
         // Setup RecyclerView
-        adapter = new AppUsageAdapter();
+        adapter = new AppUsageAdapter(requireContext());
         rvAppUsageList.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvAppUsageList.setAdapter(adapter);
 
+        // Initialize ViewModel
+        viewModel = new ViewModelProvider(this).get(AppUsageViewModel.class);
+
+        // Observe today's app usage
+        viewModel.getTodayAppUsage().observe(getViewLifecycleOwner(), usageList -> {
+            if (usageList == null || usageList.isEmpty()) {
+                rvAppUsageList.setVisibility(View.GONE);
+                if (emptyState != null) {
+                    emptyState.setVisibility(View.VISIBLE);
+                }
+            } else {
+                rvAppUsageList.setVisibility(View.VISIBLE);
+                if (emptyState != null) {
+                    emptyState.setVisibility(View.GONE);
+                }
+                adapter.submitList(usageList);
+            }
+        });
+
+        // Observe total duration
+        viewModel.getTodayTotalDuration().observe(getViewLifecycleOwner(), duration -> {
+            if (duration == null) duration = 0L;
+            tvScreenTime.setText(formatDuration(duration));
+        });
+
+        // Observe total carbon
+        viewModel.getTodayTotalCarbon().observe(getViewLifecycleOwner(), carbon -> {
+            if (carbon == null) carbon = 0.0;
+            tvScreenCarbon.setText(String.format(Locale.getDefault(), "≈ %.3f kg CO₂", carbon));
+        });
+
         // Setup switches
-        switchAppUsage.setChecked(true); // Default on
-        switchNotifications.setChecked(true); // Default on
+        switchAppUsage.setChecked(true);
+        switchNotifications.setChecked(true);
 
         switchAppUsage.setOnCheckedChangeListener((buttonView, isChecked) -> {
             android.widget.Toast.makeText(requireContext(),
@@ -70,8 +97,6 @@ public class LiveTrackingTabFragment extends Fragment {
                 android.widget.Toast.LENGTH_SHORT).show();
         });
 
-        // Load data
-        loadLiveData();
 
         return view;
     }
@@ -79,46 +104,9 @@ public class LiveTrackingTabFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadLiveData();
-    }
-
-    private void loadLiveData() {
-        Executors.newSingleThreadExecutor().execute(() -> {
-            // Get today's screen usage
-            List<AppUsage> allUsage = db.appUsageDao().getLatest(100);
-
-            long totalScreenTimeMs = 0;
-            double totalScreenCO2 = 0.0;
-
-            for (AppUsage usage : allUsage) {
-                if (isSameDay(usage.clientCreatedAtMs, System.currentTimeMillis())) {
-                    if ("screen".equals(usage.category)) {
-                        totalScreenTimeMs += usage.durationMs;
-                        totalScreenCO2 += usage.estimatedKgCO2;
-                    }
-                }
-            }
-
-            long finalScreenTimeMs = totalScreenTimeMs;
-            double finalScreenCO2 = totalScreenCO2;
-
-            if (getActivity() != null) {
-                getActivity().runOnUiThread(() -> {
-                    tvScreenTime.setText(formatDuration(finalScreenTimeMs));
-                    tvScreenCarbon.setText(String.format("≈ %.3f kg CO₂", finalScreenCO2));
-
-                    // Filter only non-screen apps for the list
-                    List<AppUsage> appOnlyUsage = new java.util.ArrayList<>();
-                    for (AppUsage usage : allUsage) {
-                        if (isSameDay(usage.clientCreatedAtMs, System.currentTimeMillis()) &&
-                            !"screen".equals(usage.category)) {
-                            appOnlyUsage.add(usage);
-                        }
-                    }
-                    adapter.setItems(appOnlyUsage);
-                });
-            }
-        });
+        if (viewModel != null) {
+            viewModel.loadTodayData();
+        }
     }
 
     private String formatDuration(long ms) {
@@ -135,13 +123,5 @@ public class LiveTrackingTabFragment extends Fragment {
         }
     }
 
-    private boolean isSameDay(long timestamp1, long timestamp2) {
-        Calendar cal1 = Calendar.getInstance();
-        Calendar cal2 = Calendar.getInstance();
-        cal1.setTimeInMillis(timestamp1);
-        cal2.setTimeInMillis(timestamp2);
-        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-               cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
-    }
 }
 
