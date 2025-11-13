@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- App name -->
-    <string name="app_name">Mock Karbono</string>
+    <string name="app_name">Karbono</string>
 
     <!-- Navigation -->
     <string name="nav_dashboard">Dashboard</string>
@@ -19,6 +19,7 @@
     <string name="quick_actions">Quick Actions</string>
     <string name="force_sync">Force Sync</string>
     <string name="view_details">View details</string>
+    <string name="unsynced_items">Unsynced Items</string>
 
     <!-- Track tabs -->
     <string name="tab_live">Live</string>
@@ -67,7 +68,7 @@
     <string name="sync_now">Sync Now</string>
     <string name="settings_title">Settings</string>
     <string name="daily_safe_range">Daily Safe Range</string>
-    <string name="safe_range_value">0.9 kg CO₂/day</string>
+    <string name="safe_range_value">6.3 kg CO₂/day</string>
     <string name="safe_range_description">Your personal carbon budget for sustainable usage</string>
     <string name="daily_reminders">Daily reminders</string>
     <string name="about_title">About</string>
@@ -106,4 +107,52 @@
     <!-- Success messages -->
     <string name="success_appliance_added">Appliance added successfully</string>
     <string name="success_sync_complete">Sync complete</string>
+
+    <!-- Top Stats Bar -->
+    <string name="phone_carbon">Phone carbon</string>
+    <string name="appliances_carbon">Appliances carbon</string>
+    <string name="notifications_carbon">Notifications carbon</string>
+
+    <!-- Weekly Progress -->
+    <string name="your_progress">Your Progress</string>
+    <string name="this_week">This Week</string>
+
+    <!-- Formulas Page -->
+    <string name="calculation_formulas">Calculation Formulas</string>
+    <string name="view_formulas">View calculation formulas</string>
+    <string name="back">Back</string>
+    <string name="formulas_intro_title">How We Calculate Carbon</string>
+    <string name="formulas_intro_description">All carbon calculations are based on scientific research and industry-standard conversion factors. Below are the formulas used to track your digital carbon footprint.</string>
+
+    <string name="phone_carbon_title">Phone Usage Carbon</string>
+    <string name="phone_formula">CO₂ = (Screen Time × Power × Carbon Factor) / 1000</string>
+    <string name="phone_parameters">• Screen Time: Hours of active screen usage\n• Power: 3.5W average smartphone power consumption\n• Carbon Factor: 0.475 kg CO₂/kWh (global avg grid intensity)</string>
+    <string name="phone_example">Example: 2h screen time → (2 × 3.5 × 0.475) / 1000 = 0.0033 kg CO₂</string>
+
+    <string name="appliances_carbon_title">Appliances Carbon</string>
+    <string name="appliance_formula">CO₂ = (Power × Hours × Carbon Factor) / 1000</string>
+    <string name="appliance_parameters">• Power: Device wattage (e.g., 150W for refrigerator)\n• Hours: Daily usage hours\n• Carbon Factor: 0.475 kg CO₂/kWh</string>
+    <string name="appliance_example">Example: Refrigerator 150W × 24h → (150 × 24 × 0.475) / 1000 = 1.71 kg CO₂/day</string>
+
+    <string name="notifications_carbon_title">Notifications Carbon</string>
+    <string name="notification_formula">CO₂ = (Notifications × Data Transfer × Carbon Factor) / 1000</string>
+    <string name="notification_parameters">• Notifications: Daily notification count\n• Data Transfer: ~5KB average per notification\n• Carbon Factor: 0.06 kg CO₂ per GB data transferred</string>
+    <string name="notification_example">Example: 100 notifications → (100 × 5 × 0.06) / 1,000,000 = 0.00003 kg CO₂</string>
+
+    <string name="data_sources_title">Data Sources &amp; References</string>
+    <string name="reference_1_title">IEA - Global Carbon Intensity</string>
+    <string name="reference_1_description">International Energy Agency reports on global average grid carbon intensity (0.475 kg CO₂/kWh)</string>
+    <string name="reference_2_title">The Shift Project - Digital Carbon Studies</string>
+    <string name="reference_2_description">Research on energy consumption of digital devices and infrastructure</string>
+    <string name="reference_3_title">Carbon Trust - Data Center Energy</string>
+    <string name="reference_3_description">Industry standards for data transfer carbon emissions</string>
+
+    <string name="formulas_disclaimer">Note: These calculations are estimates based on average values. Actual carbon emissions may vary based on device type, location, and energy grid composition.</string>
+
+    <string name="formula_label">Formula</string>
+    <string name="parameters_label">Parameters</string>
+    <string name="example_label">Example Calculation</string>
+    <string name="info_icon">Information icon</string>
+    <string name="phone_icon">Phone icon</string>
+    <string name="appliance_icon">Appliance icon</string>
 </resources>

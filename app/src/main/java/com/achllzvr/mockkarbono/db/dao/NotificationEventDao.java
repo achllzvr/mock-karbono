@@ -23,6 +23,9 @@ public interface NotificationEventDao {
     @Query("SELECT * FROM notification_event WHERE synced = 0 ORDER BY clientCreatedAtMs ASC")
     List<NotificationEvent> getUnsynced();
 
+    @Query("SELECT * FROM notification_event ORDER BY clientCreatedAtMs DESC")
+    List<NotificationEvent> getAll();
+
     @Query("UPDATE notification_event SET synced = 1 WHERE uuid IN(:uuids)")
     void markSyncedByUuid(List<String> uuids);
 
