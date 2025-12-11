@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Day seed/circle for the weekly journey - active state -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Shadow -->
+    <item
+        android:left="2dp"
+        android:top="2dp">
+        <shape android:shape="oval">
+            <solid android:color="@color/shadow_gray" />
+            <size
+                android:width="40dp"
+                android:height="40dp" />
+        </shape>
+    </item>
+    <!-- Main circle -->
+    <item
+        android:bottom="2dp"
+        android:right="2dp">
+        <shape android:shape="oval">
+            <solid android:color="@color/matcha_green" />
+            <size
+                android:width="40dp"
+                android:height="40dp" />
+        </shape>
+    </item>
+</layer-list>
+

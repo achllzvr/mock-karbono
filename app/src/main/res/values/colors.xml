@@ -1,41 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Primary colors -->
-    <color name="colorBackground">#121212</color>
-    <color name="colorOnBackground">#EDEDED</color>
-    <color name="colorAccent">#25CF4E</color>
-    <color name="colorCarbonGray">#625D5D</color>
+    <!-- ===================== -->
+    <!-- SOFT POP DESIGN SYSTEM -->
+    <!-- ===================== -->
 
-    <!-- Surface colors -->
-    <color name="colorSurface">#1E1E1E</color>
-    <color name="colorSurfaceVariant">#2C2C2C</color>
+    <!-- Core Palette -->
+    <color name="cream_background">#FDFBF7</color>
+    <color name="matcha_green">#88C057</color>
+    <color name="matcha_green_dark">#6FA043</color>
+    <color name="matcha_green_light">#A8D47A</color>
+    <color name="marigold">#F7B538</color>
+    <color name="marigold_dark">#E5A020</color>
+    <color name="coral">#E07A5F</color>
+    <color name="coral_dark">#C9604A</color>
+    <color name="text_dark">#2D3436</color>
+    <color name="text_secondary">#636E72</color>
+    <color name="text_tertiary">#B2BEC3</color>
 
-    <!-- Semantic colors -->
-    <color name="colorError">#CF6679</color>
-    <color name="colorWarning">#FFB74D</color>
-    <color name="colorSuccess">#25CF4E</color>
+    <!-- Card & Surface Colors -->
+    <color name="card_white">#FFFFFF</color>
+    <color name="shadow_gray">#D3D3D3</color>
+    <color name="shadow_dark">#B0B0B0</color>
+    <color name="divider">#E8E8E8</color>
 
-    <!-- Component-specific colors -->
-    <color name="colorPrimary">#25CF4E</color>
-    <color name="colorPrimaryVariant">#1FA03E</color>
-    <color name="colorSecondary">#25CF4E</color>
-    <color name="colorSecondaryVariant">#1FA03E</color>
+    <!-- Progress Bar Colors -->
+    <color name="progress_green">#88C057</color>
+    <color name="progress_yellow">#F7B538</color>
+    <color name="progress_red">#E07A5F</color>
+    <color name="progress_background">#E8E8E8</color>
 
-    <!-- Text colors -->
-    <color name="colorTextPrimary">#EDEDED</color>
-    <color name="colorTextSecondary">#B0B0B0</color>
-    <color name="colorTextTertiary">#625D5D</color>
+    <!-- Pill/Badge Colors -->
+    <color name="pill_green_bg">#E8F5E0</color>
+    <color name="pill_yellow_bg">#FFF4D6</color>
+    <color name="pill_coral_bg">#FCE8E4</color>
 
-    <!-- Navigation colors -->
-    <color name="colorBottomNavSelected">#25CF4E</color>
-    <color name="colorBottomNavUnselected">#625D5D</color>
-
-    <!-- Status colors -->
-    <color name="colorOnline">#25CF4E</color>
-    <color name="colorOffline">#CF6679</color>
-    <color name="colorSyncing">#FFB74D</color>
-
-    <!-- Transparent overlays -->
+    <!-- Legacy mapping for backwards compatibility -->
+    <color name="colorBackground">#FDFBF7</color>
+    <color name="colorOnBackground">#2D3436</color>
+    <color name="colorAccent">#88C057</color>
+    <color name="colorCarbonGray">#636E72</color>
+    <color name="colorSurface">#FFFFFF</color>
+    <color name="colorSurfaceVariant">#F5F5F5</color>
+    <color name="colorError">#E07A5F</color>
+    <color name="colorWarning">#F7B538</color>
+    <color name="colorSuccess">#88C057</color>
+    <color name="colorPrimary">#88C057</color>
+    <color name="colorPrimaryVariant">#6FA043</color>
+    <color name="colorSecondary">#F7B538</color>
+    <color name="colorSecondaryVariant">#E5A020</color>
+    <color name="colorTextPrimary">#2D3436</color>
+    <color name="colorTextSecondary">#636E72</color>
+    <color name="colorTextTertiary">#B2BEC3</color>
+    <color name="colorBottomNavSelected">#88C057</color>
+    <color name="colorBottomNavUnselected">#B2BEC3</color>
+    <color name="colorOnline">#88C057</color>
+    <color name="colorOffline">#E07A5F</color>
+    <color name="colorSyncing">#F7B538</color>
     <color name="colorScrim">#99000000</color>
     <color name="colorOverlay">#33FFFFFF</color>
+
+    <!-- Podium Colors -->
+    <color name="podium_gold">#F7B538</color>
+    <color name="podium_silver">#B2BEC3</color>
+    <color name="podium_bronze">#CD9A68</color>
+
+    <!-- Badge backgrounds -->
+    <color name="badge_unlocked_bg">#FFF4D6</color>
+    <color name="badge_locked_bg">#F0F0F0</color>
 </resources>

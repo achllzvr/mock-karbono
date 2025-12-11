@@ -27,9 +27,13 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.achllzvr.mockkarbono.ui.AppUsageAdapter;
 import com.achllzvr.mockkarbono.ui.AppUsageViewModel;
 import com.achllzvr.mockkarbono.ui.fragments.DashboardFragment;
+import com.achllzvr.mockkarbono.ui.fragments.DashboardFragmentNew;
 import com.achllzvr.mockkarbono.ui.fragments.TrackFragment;
 import com.achllzvr.mockkarbono.ui.fragments.AppliancesFragment;
 import com.achllzvr.mockkarbono.ui.fragments.SyncSettingsFragment;
+import com.achllzvr.mockkarbono.ui.fragments.MarketplaceFragment;
+import com.achllzvr.mockkarbono.ui.fragments.CommunityFragment;
+import com.achllzvr.mockkarbono.ui.fragments.ProfileFragment;
 import com.achllzvr.mockkarbono.tracking.SyncWorker;
 import com.achllzvr.mockkarbono.tracking.ScreenReceiver;
 import com.achllzvr.mockkarbono.db.AppDatabase;
@@ -68,13 +72,15 @@ public class MainActivity extends AppCompatActivity {
             int itemId = item.getItemId();
 
             if (itemId == R.id.navigation_dashboard) {
-                fragment = new DashboardFragment();
+                fragment = new DashboardFragmentNew();
             } else if (itemId == R.id.navigation_track) {
                 fragment = new TrackFragment();
-            } else if (itemId == R.id.navigation_appliances) {
-                fragment = new AppliancesFragment();
-            } else if (itemId == R.id.navigation_settings) {
-                fragment = new SyncSettingsFragment();
+            } else if (itemId == R.id.navigation_marketplace) {
+                fragment = new MarketplaceFragment();
+            } else if (itemId == R.id.navigation_community) {
+                fragment = new CommunityFragment();
+            } else if (itemId == R.id.navigation_profile) {
+                fragment = new ProfileFragment();
             }
 
             if (fragment != null) {
@@ -90,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
         if (savedInstanceState == null) {
             getSupportFragmentManager()
                     .beginTransaction()
-                    .replace(R.id.fragmentContainer, new DashboardFragment())
+                    .replace(R.id.fragmentContainer, new DashboardFragmentNew())
                     .commit();
         }
 

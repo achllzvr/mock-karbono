@@ -8,6 +8,9 @@
     <string name="nav_track">Track</string>
     <string name="nav_appliances">Appliances</string>
     <string name="nav_settings">Settings</string>
+    <string name="nav_marketplace">Shop</string>
+    <string name="nav_community">Community</string>
+    <string name="nav_profile">Profile</string>
 
     <!-- Dashboard -->
     <string name="today_total">Today\'s Total</string>

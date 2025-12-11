@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tree icon for navigation and UI -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#88C057"
+        android:pathData="M12,2L4,12h3v8h10v-8h3L12,2z"/>
+    <path
+        android:fillColor="#6FA043"
+        android:pathData="M11,12h2v8h-2z"/>
+</vector>
+
