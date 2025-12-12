@@ -3,6 +3,7 @@ package com.achllzvr.mockkarbono.ui.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,13 +14,10 @@ import com.achllzvr.mockkarbono.R;
 
 import java.util.List;
 
-/**
- * Marketplace Adapter - Displays items in Soft Pop style cards
- */
-public class MarketplaceAdapter extends RecyclerView.Adapter<MarketplaceAdapter.MarketViewHolder> {
+public class MarketplaceAdapter extends RecyclerView.Adapter<MarketplaceAdapter.ViewHolder> {
 
     private List<MarketItem> items;
-    private OnItemClickListener listener;
+    private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
         void onItemClick(MarketItem item);
@@ -37,16 +35,16 @@ public class MarketplaceAdapter extends RecyclerView.Adapter<MarketplaceAdapter.
 
     @NonNull
     @Override
-    public MarketViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // ✅ CRITICAL: Ensure this points to your NEW GRID layout file
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_marketplace, parent, false);
-        return new MarketViewHolder(view);
+                .inflate(R.layout.item_marketplace_grid, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MarketViewHolder holder, int position) {
-        MarketItem item = items.get(position);
-        holder.bind(item);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        holder.bind(items.get(position), listener);
     }
 
     @Override
@@ -54,32 +52,44 @@ public class MarketplaceAdapter extends RecyclerView.Adapter<MarketplaceAdapter.
         return items.size();
     }
 
-    class MarketViewHolder extends RecyclerView.ViewHolder {
-        private ImageView imgMarketItem;
-        private TextView tvItemTitle;
-        private TextView tvItemDescription;
-        private TextView btnBuyItem;
+    // ✅ Renamed to standard 'ViewHolder' to match the class definition
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView imgItem;
+        TextView tvTitle;
+        TextView tvDesc;
+        TextView tvLocation;
+        Button btnAction;
 
-        public MarketViewHolder(@NonNull View itemView) {
+        public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            imgMarketItem = itemView.findViewById(R.id.imgMarketItem);
-            tvItemTitle = itemView.findViewById(R.id.tvItemTitle);
-            tvItemDescription = itemView.findViewById(R.id.tvItemDescription);
-            btnBuyItem = itemView.findViewById(R.id.btnBuyItem);
+            // Match these IDs with your 'item_marketplace_grid.xml'
+            imgItem = itemView.findViewById(R.id.imgMarketItem);
+            tvTitle = itemView.findViewById(R.id.tvItemTitle);
+            tvDesc = itemView.findViewById(R.id.tvItemDescription);
+            tvLocation = itemView.findViewById(R.id.tvLocation);
+            btnAction = itemView.findViewById(R.id.btnAction); // Ensure XML has this ID, not 'btnBuyItem'
         }
 
-        public void bind(MarketItem item) {
-            tvItemTitle.setText(item.getTitle());
-            tvItemDescription.setText(item.getDescription());
-            btnBuyItem.setText(item.getPrice());
-            imgMarketItem.setImageResource(item.getImageResId());
+        public void bind(final MarketItem item, final OnItemClickListener listener) {
+            // Null checks to prevent crashes if a view is missing in XML
+            if (tvTitle != null) tvTitle.setText(item.getTitle());
+            if (tvDesc != null) tvDesc.setText(item.getDescription());
+            if (imgItem != null) imgItem.setImageResource(item.getImageResId());
 
-            btnBuyItem.setOnClickListener(v -> {
-                if (listener != null) {
-                    listener.onItemClick(item);
-                }
-            });
+            if (btnAction != null) {
+                btnAction.setText(item.getPrice());
+                btnAction.setOnClickListener(v -> listener.onItemClick(item));
+            }
+
+            if (tvLocation != null) {
+                // Simple logic for demo location
+                if (item.getTitle().contains("Palawan")) tvLocation.setText("Palawan");
+                else if (item.getTitle().contains("Cebu")) tvLocation.setText("Cebu");
+                else if (item.getTitle().contains("Mindanao")) tvLocation.setText("Davao");
+                else tvLocation.setText("PH");
+            }
+
+            itemView.setOnClickListener(v -> listener.onItemClick(item));
         }
     }
 }
-

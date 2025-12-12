@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +33,7 @@ public class MarketplaceFragment extends Fragment {
     private TextView tabPlantTrees;
     private TextView tabAppliances;
     private TextView tabThrift;
+    private LinearLayout llPartnerLabel;
 
     private int currentTab = 0; // 0 = Plant Trees, 1 = Appliances, 2 = Thrift
 
@@ -45,9 +47,10 @@ public class MarketplaceFragment extends Fragment {
         tabPlantTrees = view.findViewById(R.id.tabPlantTrees);
         tabAppliances = view.findViewById(R.id.tabAppliances);
         tabThrift = view.findViewById(R.id.tabThrift);
+        llPartnerLabel = view.findViewById(R.id.llPartnerLabel);
 
         // Setup RecyclerView
-        rvMarketplaceItems.setLayoutManager(new LinearLayoutManager(requireContext()));
+        rvMarketplaceItems.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(requireContext(), 2));
         adapter = new MarketplaceAdapter(getTreeItems(), item -> {
             Toast.makeText(requireContext(), "Added to cart: " + item.getTitle(), Toast.LENGTH_SHORT).show();
         });
@@ -102,38 +105,48 @@ public class MarketplaceFragment extends Fragment {
         }
         activeTab.setBackgroundResource(R.drawable.bg_button_green);
         activeTab.setTextColor(getResources().getColor(android.R.color.white, null));
+
+        // Hide Tree Partner on other tabs
+        if (tabIndex == 0) {
+            // Tab 0 is "Plant Trees" -> Show the label
+            if (llPartnerLabel != null) llPartnerLabel.setVisibility(View.VISIBLE);
+        } else {
+            // Tab 1 or 2 (Appliances/Thrift) -> Hide the label
+            if (llPartnerLabel != null) llPartnerLabel.setVisibility(View.GONE);
+        }
     }
 
     // Mock data: Tree items
     private List<MarketItem> getTreeItems() {
         List<MarketItem> items = new ArrayList<>();
-        items.add(new MarketItem("Mango Tree", "Offsets 12kg CO₂/year", "₱500 + 🌳2", R.drawable.ic_tree));
-        items.add(new MarketItem("Narra Tree", "Offsets 18kg CO₂/year • Native", "₱750 + 🌳3", R.drawable.ic_tree));
-        items.add(new MarketItem("Coconut Palm", "Offsets 8kg CO₂/year", "₱350 + 🌳1", R.drawable.ic_tree));
-        items.add(new MarketItem("Bamboo Grove", "Offsets 25kg CO₂/year • Fast growing", "₱600 + 🌳4", R.drawable.ic_tree));
-        items.add(new MarketItem("Acacia Tree", "Offsets 15kg CO₂/year", "₱450 + 🌳2", R.drawable.ic_tree));
+        // ✅ CHANGED: Now pointing to specific images instead of ic_tree
+        items.add(new MarketItem("Mango Tree", "Offsets 12kg CO₂/year", "₱500 + 🌳 2", R.drawable.img_mango_tree));
+        items.add(new MarketItem("Narra Tree", "Offsets 18kg CO₂/year • Native", "₱750 + 🌳 3", R.drawable.img_narra_tree));
+        items.add(new MarketItem("Coconut Palm", "Offsets 8kg CO₂/year", "₱350 + 🌳 1", R.drawable.img_coconut_tree));
+        items.add(new MarketItem("Bamboo Grove", "Offsets 25kg CO₂/year • Fast growing", "₱600 + 🌳 4", R.drawable.img_bamboo_tree));
+        items.add(new MarketItem("Acacia Tree", "Offsets 15kg CO₂/year", "₱450 + 🌳 2", R.drawable.img_acacia_tree));
         return items;
     }
 
     // Mock data: Appliance items
     private List<MarketItem> getApplianceItems() {
         List<MarketItem> items = new ArrayList<>();
-        items.add(new MarketItem("Solar Panel Kit", "Saves 50kg CO₂/month", "₱15,000 + 🌳10", R.drawable.ic_appliance));
-        items.add(new MarketItem("LED Bulb Pack (10)", "Saves 5kg CO₂/month", "₱500 + 🌳1", R.drawable.ic_appliance));
-        items.add(new MarketItem("Smart Thermostat", "Saves 8kg CO₂/month", "₱3,500 + 🌳3", R.drawable.ic_appliance));
-        items.add(new MarketItem("Energy Monitor", "Track your usage", "₱1,200 + 🌳1", R.drawable.ic_appliance));
-        items.add(new MarketItem("Inverter AC Unit", "40% more efficient", "₱25,000 + 🌳15", R.drawable.ic_appliance));
+        items.add(new MarketItem("Solar Panel Kit", "Saves 50kg CO₂/month", "₱15,000 + 🌳 10", R.drawable.img_solar_panel));
+        items.add(new MarketItem("LED Bulb Pack (10)", "Saves 5kg CO₂/month", "₱500 + 🌳 1", R.drawable.img_lightbulb));
+        items.add(new MarketItem("Smart Thermostat", "Saves 8kg CO₂/month", "₱3,500 + 🌳 3", R.drawable.img_thermostat));
+        items.add(new MarketItem("Energy Monitor", "Track your usage", "₱1,200 + 🌳 1", R.drawable.img_energy_monitor));
+        items.add(new MarketItem("Inverter AC Unit", "40% more efficient", "₱25,000 + 🌳 15", R.drawable.img_ac));
         return items;
     }
 
     // Mock data: Thrift items
     private List<MarketItem> getThriftItems() {
         List<MarketItem> items = new ArrayList<>();
-        items.add(new MarketItem("Vintage Denim Jacket", "Size M • Like new", "₱450 + 🌳1", R.drawable.ic_shop));
-        items.add(new MarketItem("Preloved Sneakers", "Size 42 • Good condition", "₱800 + 🌳1", R.drawable.ic_shop));
-        items.add(new MarketItem("Eco-friendly Tote Bag", "Handmade • Organic cotton", "₱250 + 🌳1", R.drawable.ic_shop));
-        items.add(new MarketItem("Refurbished Tablet", "Works perfectly", "₱5,000 + 🌳3", R.drawable.ic_shop));
-        items.add(new MarketItem("Upcycled Furniture", "Unique piece", "₱2,500 + 🌳2", R.drawable.ic_shop));
+        items.add(new MarketItem("Vintage Denim Jacket", "Size M • Like new", "₱450 + 🌳 1", R.drawable.img_jacket));
+        items.add(new MarketItem("Preloved Sneakers", "Size 42 • Good condition", "₱800 + 🌳 1", R.drawable.img_sneakers));
+        items.add(new MarketItem("Eco-friendly Tote Bag", "Handmade • Organic cotton", "₱250 + 🌳 1", R.drawable.img_bag));
+        items.add(new MarketItem("Refurbished Tablet", "Works perfectly", "₱5,000 + 🌳 3", R.drawable.img_tablet));
+        items.add(new MarketItem("Upcycled Furniture", "Unique piece", "₱2,500 + 🌳 2", R.drawable.img_furniture));
         return items;
     }
 }
