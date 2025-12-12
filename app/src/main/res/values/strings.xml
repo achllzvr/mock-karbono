@@ -4,7 +4,7 @@
     <string name="app_name">Karbono</string>
 
     <!-- Navigation -->
-    <string name="nav_dashboard">Dashboard</string>
+    <string name="nav_home">Home</string>
     <string name="nav_track">Track</string>
     <string name="nav_appliances">Appliances</string>
     <string name="nav_settings">Settings</string>

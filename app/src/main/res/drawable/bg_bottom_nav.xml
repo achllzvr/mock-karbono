@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Speech bubble background for mascot message -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Shadow -->
+    <item
+        android:top="3dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/shadow_gray" />
+            <corners android:radius="20dp" />
+        </shape>
+    </item>
+
+    <!-- Main bubble -->
+    <item
+        android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/card_white" />
+            <stroke
+                android:width="1dp"
+                android:color="@color/divider" />
+        </shape>
+    </item>
+
+</layer-list>
+
