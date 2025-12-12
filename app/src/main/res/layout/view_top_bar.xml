@@ -27,7 +27,7 @@
 
         android:padding="4dp"
 
-        android:src="@drawable/bg_avatar"
+        android:src="@drawable/img_asian_male_avatar"
         android:scaleType="centerCrop"
         android:contentDescription="User Avatar"
 

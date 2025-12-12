@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Community Fragment - Soft Pop Style with Podium -->
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/cream_background"
     android:fillViewport="true">
 
@@ -15,25 +15,35 @@
         android:padding="20dp">
 
         <!-- Header Section -->
-        <TextView
-            android:id="@+id/tvCommunityTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Community"
-            android:textSize="28sp"
-            android:textColor="@color/text_dark"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-medium"
-            android:layout_marginBottom="4dp" />
 
         <TextView
-            android:id="@+id/tvCommunitySubtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Compete and connect with others"
-            android:textSize="14sp"
-            android:textColor="@color/text_secondary"
-            android:layout_marginBottom="24dp" />
+            android:text="Friend Streaks"
+            android:textSize="18sp"
+            android:textColor="@color/text_dark"
+            android:textStyle="bold"
+            android:layout_marginBottom="15dp" />
+
+        <!-- Friend Streaks -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="16dp"
+            android:clipToPadding="false">
+            
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFriendStreaks"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                tools:listitem="@layout/item_friend_streak" />
+        </HorizontalScrollView>
+
 
         <!-- Leaderboard Card with Hard Shadow -->
         <LinearLayout
@@ -71,11 +81,15 @@
                     android:gravity="center"
                     android:layout_marginEnd="8dp">
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/imgSecondPlace"
                         android:layout_width="56dp"
                         android:layout_height="56dp"
-                        android:background="@drawable/bg_avatar_circle"
+                        android:background="@drawable/bg_avatar_circle_second"
+                        android:padding="4dp"
+                        app:shapeAppearanceOverlay="@style/CircleImageStyle"
+                        app:strokeWidth="1.5dp"
+                        app:strokeColor="@color/shadow_gray"
                         android:scaleType="centerCrop"
                         android:contentDescription="2nd Place" />
 
@@ -98,10 +112,15 @@
                         android:textColor="@color/text_secondary" />
 
                     <!-- Silver Podium -->
-                    <View
+                    <TextView
                         android:layout_width="60dp"
                         android:layout_height="50dp"
-                        android:background="@color/shadow_gray"
+                        android:background="@drawable/bg_rounded_top_corners_second"
+                        android:text="2nd"
+                        android:textSize="12sp"
+                        android:textColor="@color/cream_background"
+                        android:textStyle="bold"
+                        android:gravity="center"
                         android:layout_marginTop="8dp" />
 
                 </LinearLayout>
@@ -121,11 +140,15 @@
                         android:textSize="24sp"
                         android:layout_marginBottom="4dp" />
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/imgFirstPlace"
                         android:layout_width="72dp"
                         android:layout_height="72dp"
-                        android:background="@drawable/bg_avatar_circle"
+                        android:background="@drawable/bg_avatar_circle_first"
+                        android:padding="4dp"
+                        app:shapeAppearanceOverlay="@style/CircleImageStyle"
+                        app:strokeWidth="1.5dp"
+                        app:strokeColor="@color/shadow_gray"
                         android:scaleType="centerCrop"
                         android:contentDescription="1st Place" />
 
@@ -149,10 +172,15 @@
                         android:textStyle="bold" />
 
                     <!-- Gold Podium -->
-                    <View
+                    <TextView
                         android:layout_width="70dp"
                         android:layout_height="70dp"
-                        android:background="@color/marigold"
+                        android:background="@drawable/bg_rounded_top_corners_first"
+                        android:text="1st"
+                        android:textSize="12sp"
+                        android:textColor="@color/cream_background"
+                        android:textStyle="bold"
+                        android:gravity="center"
                         android:layout_marginTop="8dp" />
 
                 </LinearLayout>
@@ -166,11 +194,15 @@
                     android:gravity="center"
                     android:layout_marginStart="8dp">
 
-                    <ImageView
+                    <com.google.android.material.imageview.ShapeableImageView
                         android:id="@+id/imgThirdPlace"
                         android:layout_width="48dp"
                         android:layout_height="48dp"
-                        android:background="@drawable/bg_avatar_circle"
+                        android:background="@drawable/bg_avatar_circle_third"
+                        android:padding="4dp"
+                        app:shapeAppearanceOverlay="@style/CircleImageStyle"
+                        app:strokeWidth="1.5dp"
+                        app:strokeColor="@color/shadow_gray"
                         android:scaleType="centerCrop"
                         android:contentDescription="3rd Place" />
 
@@ -193,17 +225,22 @@
                         android:textColor="@color/text_secondary" />
 
                     <!-- Bronze Podium -->
-                    <View
+                    <TextView
                         android:layout_width="50dp"
                         android:layout_height="35dp"
-                        android:background="@color/coral"
+                        android:background="@drawable/bg_rounded_top_corners_third"
+                        android:text="3rd"
+                        android:textSize="12sp"
+                        android:textColor="@color/cream_background"
+                        android:textStyle="bold"
+                        android:gravity="center"
                         android:layout_marginTop="8dp" />
 
                 </LinearLayout>
 
             </LinearLayout>
 
-            <!-- Your Rank -->
+            <!-- Ranks -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -241,11 +278,33 @@
 
         </LinearLayout>
 
+        <!-- Communities Section -->
+        <TextView
+            android:id="@+id/tvCommunities"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Communities"
+            android:textSize="18sp"
+            android:textColor="@color/text_dark"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Communities RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCommunities"
+            android:layout_width="match_parent"
+            android:layout_height="560dp"
+            app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+            app:spanCount="2"
+            app:layout_constraintTop_toBottomOf="@id/tvCommunities"
+            app:layout_constraintBottom_toBottomOf="parent"
+            tools:listitem="@layout/item_community_groups" />
+
         <!-- Forum Section Title -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="💬 Community Discussions"
+            android:text="Community Discussions"
             android:textSize="18sp"
             android:textColor="@color/text_dark"
             android:textStyle="bold"
@@ -362,4 +421,3 @@
     </LinearLayout>
 
 </ScrollView>
-
