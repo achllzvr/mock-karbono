@@ -46,14 +46,6 @@ public class AppliancesTabFragment extends Fragment {
         rvAppliancesPreview.setLayoutManager(new LinearLayoutManager(requireContext()));
         rvAppliancesPreview.setAdapter(adapter);
 
-        // FAB click - navigate to Track page (appliances tab)
-        fabAddAppliance.setOnClickListener(v -> {
-            // Navigate to TrackFragment which contains appliances tab
-            ((com.google.android.material.bottomnavigation.BottomNavigationView)
-                requireActivity().findViewById(R.id.bottomNavigation))
-                .setSelectedItemId(R.id.navigation_track);
-        });
-
         // Load data
         loadAppliances();
 

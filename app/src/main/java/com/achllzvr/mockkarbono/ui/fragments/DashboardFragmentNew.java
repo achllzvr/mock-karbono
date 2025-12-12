@@ -58,7 +58,6 @@ public class DashboardFragmentNew extends Fragment {
     private TextView tvTopApp1, tvTopApp2, tvTopApp3;
     private TextView tvTopAppliance1, tvTopAppliance2, tvTopAppliance3;
     private ImageButton[] seedButtons = new ImageButton[7];
-    private TextView btnStartTracking;
 
     // Animation handlers
     private Handler animationHandler = new Handler(Looper.getMainLooper());
@@ -95,15 +94,36 @@ public class DashboardFragmentNew extends Fragment {
         leavesContainer = view.findViewById(R.id.leavesContainer);
         tvTodayCarbon = view.findViewById(R.id.tvTodayCarbon);
         tvCarbonStatus = view.findViewById(R.id.tvCarbonStatus);
-        tvPhoneCarbonValue = view.findViewById(R.id.tvPhoneCarbonValue);
-        tvApplianceCarbonValue = view.findViewById(R.id.tvApplianceCarbonValue);
-        tvTopApp1 = view.findViewById(R.id.tvTopApp1);
-        tvTopApp2 = view.findViewById(R.id.tvTopApp2);
-        tvTopApp3 = view.findViewById(R.id.tvTopApp3);
-        tvTopAppliance1 = view.findViewById(R.id.tvTopAppliance1);
-        tvTopAppliance2 = view.findViewById(R.id.tvTopAppliance2);
-        tvTopAppliance3 = view.findViewById(R.id.tvTopAppliance3);
-        btnStartTracking = view.findViewById(R.id.btnStartTracking);
+
+        // Bind top texts inside cards (layout doesn't provide explicit IDs for inner TextViews)
+        LinearLayout cardSmartphone = view.findViewById(R.id.cardSmartphone);
+        LinearLayout cardAppliances = view.findViewById(R.id.cardAppliances);
+
+        try {
+            ViewGroup cs = (ViewGroup) cardSmartphone;
+            ViewGroup appRel1 = (ViewGroup) cs.getChildAt(1); // TikTok row
+            ViewGroup appRel2 = (ViewGroup) cs.getChildAt(3); // Facebook row
+            ViewGroup appRel3 = (ViewGroup) cs.getChildAt(5); // Games row
+
+            tvTopApp1 = (TextView) appRel1.getChildAt(0);
+            tvPhoneCarbonValue = (TextView) appRel1.getChildAt(1);
+
+            tvTopApp2 = (TextView) appRel2.getChildAt(0);
+            tvTopApp3 = (TextView) appRel3.getChildAt(0);
+        } catch (Exception ignored) {}
+
+        try {
+            ViewGroup ca = (ViewGroup) cardAppliances;
+            ViewGroup apRel1 = (ViewGroup) ca.getChildAt(1); // AC row
+            ViewGroup apRel2 = (ViewGroup) ca.getChildAt(3); // Refrigerator row
+            ViewGroup apRel3 = (ViewGroup) ca.getChildAt(5); // Computer row
+
+            tvTopAppliance1 = (TextView) apRel1.getChildAt(0);
+            tvApplianceCarbonValue = (TextView) apRel1.getChildAt(1);
+
+            tvTopAppliance2 = (TextView) apRel2.getChildAt(0);
+            tvTopAppliance3 = (TextView) apRel3.getChildAt(0);
+        } catch (Exception ignored) {}
 
         // Bind seed buttons
         seedButtons[0] = view.findViewById(R.id.seedDay1);
@@ -116,9 +136,6 @@ public class DashboardFragmentNew extends Fragment {
     }
 
     private void setupClickListeners() {
-        btnStartTracking.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Tracking is active! 🌿", Toast.LENGTH_SHORT).show();
-        });
 
         // Seed button clicks
         for (int i = 0; i < seedButtons.length; i++) {

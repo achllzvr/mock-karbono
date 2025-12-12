@@ -73,8 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
             if (itemId == R.id.navigation_dashboard) {
                 fragment = new DashboardFragmentNew();
-            } else if (itemId == R.id.navigation_track) {
-                fragment = new TrackFragment();
             } else if (itemId == R.id.navigation_marketplace) {
                 fragment = new MarketplaceFragment();
             } else if (itemId == R.id.navigation_community) {
