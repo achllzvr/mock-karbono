@@ -238,7 +238,7 @@ public class DashboardFragmentNew extends Fragment {
         } else if (carbonUsage <= THRESHOLD_CRITICAL) {
             newState = STATE_WARNING;
             message = getWarningMessage();
-            mascotRes = R.drawable.mascor_warning;
+            mascotRes = R.drawable.mascot_warning;
         } else {
             newState = STATE_CRITICAL;
             message = getCriticalMessage();
