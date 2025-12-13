@@ -37,7 +37,6 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Using item_community_groups.xml layout for community items
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_community_groups, parent, false);
         return new ViewHolder(view);
@@ -54,29 +53,28 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.View
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgItem;
+        ImageView imgCommunity;
         TextView tvTitle;
         TextView tvDesc;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Binding to views in item_community_groups.xml
-            imgItem = itemView.findViewById(R.id.imgCommunity);
-            tvTitle = itemView.findViewById(R.id.tvItemTitle);
-            tvDesc = itemView.findViewById(R.id.tvItemDescription);
+            // Correctly bind to the views in item_community_groups.xml
+            imgCommunity = itemView.findViewById(R.id.imgCommunity);
+            tvTitle = itemView.findViewById(R.id.tvCommunityName);
+            tvDesc = itemView.findViewById(R.id.tvCommunityMemberCount);
         }
 
         public void bind(final Community item, final OnItemClickListener listener) {
             if (tvTitle != null) tvTitle.setText(item.getTitle());
             if (tvDesc != null) tvDesc.setText(item.getDescription());
             
-            // Use Glide for efficient image loading and caching
-            if (imgItem != null) {
+            if (imgCommunity != null) {
                 Glide.with(itemView.getContext())
                     .load(item.getImageResId())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
-                    .into(imgItem);
+                    .into(imgCommunity);
             }
             
             itemView.setOnClickListener(v -> listener.onItemClick(item));

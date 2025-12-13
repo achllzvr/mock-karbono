@@ -2,6 +2,8 @@ package com.achllzvr.mockkarbono.ui.fragments;
 
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -19,13 +21,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.achllzvr.mockkarbono.R;
 import com.achllzvr.mockkarbono.db.AppDatabase;
 import com.achllzvr.mockkarbono.db.entities.AppUsage;
 import com.achllzvr.mockkarbono.db.entities.ApplianceLog;
+import com.achllzvr.mockkarbono.db.entities.NotificationEvent;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
@@ -57,7 +62,10 @@ public class DashboardFragmentNew extends Fragment {
     private TextView tvApplianceCarbonValue;
     private TextView tvTopApp1, tvTopApp2, tvTopApp3;
     private TextView tvTopAppliance1, tvTopAppliance2, tvTopAppliance3;
+    private ImageView imgTopApp1, imgTopApp2, imgTopApp3;
     private ImageButton[] seedButtons = new ImageButton[7];
+    private LinearLayout cardSmartphone;
+    private LinearLayout cardAppliances;
 
     // Animation handlers
     private Handler animationHandler = new Handler(Looper.getMainLooper());
@@ -96,20 +104,20 @@ public class DashboardFragmentNew extends Fragment {
         tvCarbonStatus = view.findViewById(R.id.tvCarbonStatus);
 
         // Bind top texts inside cards (layout doesn't provide explicit IDs for inner TextViews)
-        LinearLayout cardSmartphone = view.findViewById(R.id.cardSmartphone);
-        LinearLayout cardAppliances = view.findViewById(R.id.cardAppliances);
+        cardSmartphone = view.findViewById(R.id.cardSmartphone);
+        cardAppliances = view.findViewById(R.id.cardAppliances);
 
         try {
-            ViewGroup cs = (ViewGroup) cardSmartphone;
-            ViewGroup appRel1 = (ViewGroup) cs.getChildAt(1); // TikTok row
-            ViewGroup appRel2 = (ViewGroup) cs.getChildAt(3); // Facebook row
-            ViewGroup appRel3 = (ViewGroup) cs.getChildAt(5); // Games row
+            // Updated binding logic for new dashboard layout with app icons
+            imgTopApp1 = view.findViewById(R.id.imgTopApp1);
+            tvTopApp1 = view.findViewById(R.id.tvTopApp1);
+            tvPhoneCarbonValue = view.findViewById(R.id.tvPhoneCarbonValue);
 
-            tvTopApp1 = (TextView) appRel1.getChildAt(0);
-            tvPhoneCarbonValue = (TextView) appRel1.getChildAt(1);
+            imgTopApp2 = view.findViewById(R.id.imgTopApp2);
+            tvTopApp2 = view.findViewById(R.id.tvTopApp2);
 
-            tvTopApp2 = (TextView) appRel2.getChildAt(0);
-            tvTopApp3 = (TextView) appRel3.getChildAt(0);
+            imgTopApp3 = view.findViewById(R.id.imgTopApp3);
+            tvTopApp3 = view.findViewById(R.id.tvTopApp3);
         } catch (Exception ignored) {}
 
         try {
@@ -150,28 +158,98 @@ public class DashboardFragmentNew extends Fragment {
             tvMascotMessage.setText(getRandomMascotMessage());
             startBounceAnimation();
         });
+
+        // Expand Smartphone card
+        if (cardSmartphone != null) {
+            // Find expand text button at the bottom of the card
+            TextView expandText = (TextView) cardSmartphone.getChildAt(cardSmartphone.getChildCount() - 1);
+            expandText.setOnClickListener(v -> {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentContainer, new TrackFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            });
+        }
+        
+        // Expand Appliances card
+        if (cardAppliances != null) {
+            // Find expand text button at the bottom of the card
+            TextView expandText = (TextView) cardAppliances.getChildAt(cardAppliances.getChildCount() - 1);
+            expandText.setOnClickListener(v -> {
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragmentContainer, new AppliancesFragment());
+                transaction.addToBackStack(null);
+                transaction.commit();
+            });
+        }
     }
 
     private void loadDashboardData() {
-        // For demo, use mock data
-        loadMockData();
+        Executors.newSingleThreadExecutor().execute(() -> {
+            // Load real data from DB
+            String today = getTodayDate();
+            long dayStartMs = getTodayStartTimestamp();
+            long dayEndMs = dayStartMs + (24 * 60 * 60 * 1000);
 
-        // Start mascot animation based on state
-        updateMascotState(2.4); // Mock carbon value
+            // App Usage
+            List<AppUsage> todayUsage = db.appUsageDao().getLatest(100);
+            double phoneCO2 = 0.0;
+            for (AppUsage usage : todayUsage) {
+                if (usage.clientCreatedAtMs >= dayStartMs && usage.clientCreatedAtMs < dayEndMs) {
+                    phoneCO2 += usage.estimatedKgCO2;
+                }
+            }
+
+            // Notifications
+            List<NotificationEvent> todayNotifs = db.notificationEventDao().getAll();
+            double notifCO2 = 0.0;
+            for (NotificationEvent notif : todayNotifs) {
+                if (notif.clientCreatedAtMs >= dayStartMs && notif.clientCreatedAtMs < dayEndMs) {
+                    notifCO2 += notif.estimatedKgCO2;
+                }
+            }
+            phoneCO2 += notifCO2; // Combine phone usage and notifications
+
+            // Appliances
+            List<ApplianceLog> appliances = db.applianceDao().getAll();
+            double applianceCO2 = 0.0;
+            for (ApplianceLog app : appliances) {
+                applianceCO2 += app.estimatedKgCO2PerDay;
+            }
+
+            double totalCO2 = phoneCO2 + applianceCO2;
+
+            // Prepare Top Apps list
+            // For now, simple sort or just take first 3 if available
+            Collections.sort(todayUsage, (a, b) -> Double.compare(b.durationMs, a.durationMs));
+            List<AppUsage> topApps = todayUsage.size() > 3 ? todayUsage.subList(0, 3) : todayUsage;
+
+            // Prepare Top Appliances
+            Collections.sort(appliances, (a, b) -> Double.compare(b.estimatedKgCO2PerDay, a.estimatedKgCO2PerDay));
+            List<ApplianceLog> topAppliances = appliances.size() > 3 ? appliances.subList(0, 3) : appliances;
+
+            // Pass final values to UI thread
+            double finalPhoneCO2 = phoneCO2;
+            double finalApplianceCO2 = applianceCO2;
+            double finalTotalCO2 = totalCO2;
+
+            if (getActivity() != null) {
+                getActivity().runOnUiThread(() -> {
+                    updateDashboardUI(finalTotalCO2, finalPhoneCO2, finalApplianceCO2, topApps, topAppliances);
+                });
+            }
+        });
     }
 
-    private void loadMockData() {
-        // Mock carbon values
-        double phoneCO2 = 0.8;
-        double applianceCO2 = 1.6;
-        double totalCO2 = phoneCO2 + applianceCO2;
+    private void updateDashboardUI(double totalCO2, double phoneCO2, double applianceCO2, 
+                                  List<AppUsage> topApps, List<ApplianceLog> topAppliances) {
+        
+        // Update carbon values
+        tvTodayCarbon.setText(String.format(Locale.US, "%.3f", totalCO2));
+        tvPhoneCarbonValue.setText(String.format(Locale.US, "%.1f %%", (totalCO2 > 0 ? (phoneCO2/totalCO2)*100 : 0))); // Showing percentage contribution
+        tvApplianceCarbonValue.setText(String.format(Locale.US, "%.1f %%", (totalCO2 > 0 ? (applianceCO2/totalCO2)*100 : 0)));
 
-        // Update UI
-        tvTodayCarbon.setText(String.format(Locale.US, "%.1f", totalCO2));
-        tvPhoneCarbonValue.setText(String.format(Locale.US, "%.1f kg", phoneCO2));
-        tvApplianceCarbonValue.setText(String.format(Locale.US, "%.1f kg", applianceCO2));
-
-        // Update status
+        // Update status text
         if (totalCO2 <= THRESHOLD_WARNING) {
             tvCarbonStatus.setText("✓ Great job! Within daily limit");
             tvCarbonStatus.setTextColor(getResources().getColor(R.color.matcha_green, null));
@@ -186,18 +264,59 @@ public class DashboardFragmentNew extends Fragment {
             tvTodayCarbon.setTextColor(getResources().getColor(R.color.coral, null));
         }
 
-        // Mock top apps
-        tvTopApp1.setText("• TikTok: 2h");
-        tvTopApp2.setText("• YouTube: 1.5h");
-        tvTopApp3.setText("• Instagram: 45m");
+        // Update Top Apps UI
+        PackageManager pm = requireContext().getPackageManager();
+        if (topApps.size() >= 1 && tvTopApp1 != null) {
+            try {
+                ApplicationInfo appInfo = pm.getApplicationInfo(topApps.get(0).packageName, 0);
+                tvTopApp1.setText(pm.getApplicationLabel(appInfo));
+                if (imgTopApp1 != null) imgTopApp1.setImageDrawable(pm.getApplicationIcon(appInfo));
+            } catch (PackageManager.NameNotFoundException e) {
+                tvTopApp1.setText(formatPackageName(topApps.get(0).packageName));
+                if (imgTopApp1 != null) imgTopApp1.setImageResource(R.drawable.ic_app_placeholder);
+            }
+        }
+        if (topApps.size() >= 2 && tvTopApp2 != null) {
+            try {
+                ApplicationInfo appInfo = pm.getApplicationInfo(topApps.get(1).packageName, 0);
+                tvTopApp2.setText(pm.getApplicationLabel(appInfo));
+                if (imgTopApp2 != null) imgTopApp2.setImageDrawable(pm.getApplicationIcon(appInfo));
+            } catch (PackageManager.NameNotFoundException e) {
+                tvTopApp2.setText(formatPackageName(topApps.get(1).packageName));
+                if (imgTopApp2 != null) imgTopApp2.setImageResource(R.drawable.ic_app_placeholder);
+            }
+        }
+        if (topApps.size() >= 3 && tvTopApp3 != null) {
+            try {
+                ApplicationInfo appInfo = pm.getApplicationInfo(topApps.get(2).packageName, 0);
+                tvTopApp3.setText(pm.getApplicationLabel(appInfo));
+                if (imgTopApp3 != null) imgTopApp3.setImageDrawable(pm.getApplicationIcon(appInfo));
+            } catch (PackageManager.NameNotFoundException e) {
+                tvTopApp3.setText(formatPackageName(topApps.get(2).packageName));
+                if (imgTopApp3 != null) imgTopApp3.setImageResource(R.drawable.ic_app_placeholder);
+            }
+        }
 
-        // Mock top appliances
-        tvTopAppliance1.setText("• AC: 8h");
-        tvTopAppliance2.setText("• Refrigerator: 24h");
-        tvTopAppliance3.setText("• TV: 3h");
+        // Update Top Appliances UI
+        if (topAppliances.size() >= 1 && tvTopAppliance1 != null) tvTopAppliance1.setText(topAppliances.get(0).name);
+        if (topAppliances.size() >= 2 && tvTopAppliance2 != null) tvTopAppliance2.setText(topAppliances.get(1).name);
+        if (topAppliances.size() >= 3 && tvTopAppliance3 != null) tvTopAppliance3.setText(topAppliances.get(2).name);
+
+        // Update mascot state
+        updateMascotState(totalCO2);
 
         // Setup weekly seeds based on current day
         setupWeeklySeeds();
+    }
+    
+    private String formatPackageName(String packageName) {
+        // Remove domain prefix (com.whatsapp → WhatsApp)
+        String[] parts = packageName.split("\\.");
+        if (parts.length > 0) {
+            String name = parts[parts.length - 1];
+            return name.substring(0, 1).toUpperCase() + name.substring(1);
+        }
+        return packageName;
     }
 
     private void setupWeeklySeeds() {
@@ -453,8 +572,8 @@ public class DashboardFragmentNew extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        loadDashboardData(); // Reload data when returning to fragment
         isAnimating = true;
-        updateMascotState(2.4); // Resume animations
     }
 
     @Override
@@ -468,5 +587,18 @@ public class DashboardFragmentNew extends Fragment {
         super.onDestroyView();
         stopAllAnimations();
     }
+    
+    private String getTodayDate() {
+        java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("yyyy-MM-dd", Locale.US);
+        return sdf.format(Calendar.getInstance().getTime());
+    }
+    
+    private long getTodayStartTimestamp() {
+        Calendar dayStart = Calendar.getInstance();
+        dayStart.set(Calendar.HOUR_OF_DAY, 0);
+        dayStart.set(Calendar.MINUTE, 0);
+        dayStart.set(Calendar.SECOND, 0);
+        dayStart.set(Calendar.MILLISECOND, 0);
+        return dayStart.getTimeInMillis();
+    }
 }
-

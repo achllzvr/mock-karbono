@@ -4,9 +4,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.achllzvr.mockkarbono.R;
@@ -16,69 +18,59 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-public class ApplianceAdapter extends RecyclerView.Adapter<ApplianceAdapter.ViewHolder> {
+public class ApplianceAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private final List<ApplianceLog> items = new ArrayList<>();
-    private final OnApplianceClickListener editListener;
-    private final OnApplianceClickListener deleteListener;
+    private static final int VIEW_TYPE_FULL = 1;
+    private static final int VIEW_TYPE_PREVIEW = 2;
 
-    public interface OnApplianceClickListener {
-        void onClick(ApplianceLog appliance);
+    private List<ApplianceLog> items = new ArrayList<>();
+    private final EditListener editListener;
+    private final DeleteListener deleteListener;
+
+    public interface EditListener {
+        void onEdit(ApplianceLog appliance);
     }
 
-    public ApplianceAdapter(OnApplianceClickListener editListener, OnApplianceClickListener deleteListener) {
+    public interface DeleteListener {
+        void onDelete(ApplianceLog appliance);
+    }
+
+    public ApplianceAdapter(@Nullable EditListener editListener, @Nullable DeleteListener deleteListener) {
         this.editListener = editListener;
         this.deleteListener = deleteListener;
     }
 
-    public void setItems(List<ApplianceLog> list) {
-        items.clear();
-        if (list != null) items.addAll(list);
+    public void setItems(List<ApplianceLog> newItems) {
+        this.items = newItems;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        // If listeners are null, we are in preview mode
+        return (editListener == null && deleteListener == null) ? VIEW_TYPE_PREVIEW : VIEW_TYPE_FULL;
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.list_item_appliance, parent, false);
-        return new ViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (viewType == VIEW_TYPE_PREVIEW) {
+            View view = inflater.inflate(R.layout.item_appliance_preview, parent, false);
+            return new PreviewViewHolder(view);
+        }
+        // Default to the full view
+        View view = inflater.inflate(R.layout.item_appliance_full, parent, false);
+        return new FullViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ApplianceLog appliance = items.get(position);
-
-        holder.tvApplianceName.setText(appliance.name);
-        holder.tvApplianceWattage.setText(String.format(Locale.US, "%dW", appliance.typicalWattage));
-        holder.tvApplianceHours.setText(String.format(Locale.US, "%.1f hrs/day", appliance.hoursPerDay));
-        holder.tvApplianceCO2.setText(String.format(Locale.US, "%.3f kg CO₂/day", appliance.estimatedKgCO2PerDay));
-
-        // Sync status
-        if (appliance.synced) {
-            holder.tvSyncStatus.setText("✓");
-            holder.tvSyncStatus.setTextColor(holder.itemView.getContext()
-                    .getResources().getColor(R.color.colorAccent, null));
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+        ApplianceLog item = items.get(position);
+        if (holder.getItemViewType() == VIEW_TYPE_PREVIEW) {
+            ((PreviewViewHolder) holder).bind(item);
         } else {
-            holder.tvSyncStatus.setText("○");
-            holder.tvSyncStatus.setTextColor(holder.itemView.getContext()
-                    .getResources().getColor(R.color.colorCarbonGray, null));
-        }
-
-        // Edit button
-        if (editListener != null) {
-            holder.btnEdit.setVisibility(View.VISIBLE);
-            holder.btnEdit.setOnClickListener(v -> editListener.onClick(appliance));
-        } else {
-            holder.btnEdit.setVisibility(View.GONE);
-        }
-
-        // Delete button
-        if (deleteListener != null) {
-            holder.btnDelete.setVisibility(View.VISIBLE);
-            holder.btnDelete.setOnClickListener(v -> deleteListener.onClick(appliance));
-        } else {
-            holder.btnDelete.setVisibility(View.GONE);
+            ((FullViewHolder) holder).bind(item, editListener, deleteListener);
         }
     }
 
@@ -87,25 +79,48 @@ public class ApplianceAdapter extends RecyclerView.Adapter<ApplianceAdapter.View
         return items.size();
     }
 
-    static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView tvApplianceName;
-        TextView tvApplianceWattage;
-        TextView tvApplianceHours;
-        TextView tvApplianceCO2;
-        TextView tvSyncStatus;
-        ImageButton btnEdit;
-        ImageButton btnDelete;
+    // ViewHolder for the full list item with edit/delete buttons
+    static class FullViewHolder extends RecyclerView.ViewHolder {
+        TextView tvName, tvDetails, tvCarbon;
+        ImageButton btnEdit, btnDelete;
 
-        ViewHolder(@NonNull View itemView) {
+        public FullViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvApplianceName = itemView.findViewById(R.id.tvApplianceName);
-            tvApplianceWattage = itemView.findViewById(R.id.tvApplianceWattage);
-            tvApplianceHours = itemView.findViewById(R.id.tvApplianceHours);
-            tvApplianceCO2 = itemView.findViewById(R.id.tvApplianceCO2);
-            tvSyncStatus = itemView.findViewById(R.id.tvApplianceSyncStatus);
+            tvName = itemView.findViewById(R.id.tvApplianceName);
+            tvDetails = itemView.findViewById(R.id.tvApplianceDetails);
+            tvCarbon = itemView.findViewById(R.id.tvApplianceCarbon);
             btnEdit = itemView.findViewById(R.id.btnEditAppliance);
             btnDelete = itemView.findViewById(R.id.btnDeleteAppliance);
         }
+
+        public void bind(final ApplianceLog appliance, final EditListener editListener, final DeleteListener deleteListener) {
+            tvName.setText(appliance.name);
+            tvDetails.setText(String.format(Locale.US, "%dW %.1f hrs/day", appliance.typicalWattage, appliance.hoursPerDay));
+            tvCarbon.setText(String.format(Locale.US, "%.3f kg CO₂/day", appliance.estimatedKgCO2PerDay));
+
+            btnEdit.setOnClickListener(v -> editListener.onEdit(appliance));
+            btnDelete.setOnClickListener(v -> deleteListener.onDelete(appliance));
+        }
+    }
+
+    // ViewHolder for the preview list item with a radio button
+    static class PreviewViewHolder extends RecyclerView.ViewHolder {
+        TextView tvName, tvDetails, tvCarbon;
+        RadioButton radioActive;
+
+        public PreviewViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvName = itemView.findViewById(R.id.tvApplianceName);
+            tvDetails = itemView.findViewById(R.id.tvApplianceDetails);
+            tvCarbon = itemView.findViewById(R.id.tvApplianceCarbon);
+            radioActive = itemView.findViewById(R.id.radioApplianceActive);
+        }
+
+        public void bind(final ApplianceLog appliance) {
+            tvName.setText(appliance.name);
+            tvDetails.setText(String.format(Locale.US, "%dW %.1f hrs/day", appliance.typicalWattage, appliance.hoursPerDay));
+            tvCarbon.setText(String.format(Locale.US, "%.3f kg CO₂/day", appliance.estimatedKgCO2PerDay));
+            radioActive.setChecked(true); // Default to active in preview
+        }
     }
 }
-

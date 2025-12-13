@@ -34,4 +34,3 @@ public class TrackPagerAdapter extends FragmentStateAdapter {
         return 3;
     }
 }
-

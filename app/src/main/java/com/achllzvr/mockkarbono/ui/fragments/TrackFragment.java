@@ -17,23 +17,24 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.achllzvr.mockkarbono.R;
 import com.achllzvr.mockkarbono.ui.adapters.TrackPagerAdapter;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 
 public class TrackFragment extends Fragment {
 
-    private TabLayout tabLayout;
     private ViewPager2 viewPager;
+    private TextView tabLive, tabNotifications, tabAppliances;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_track, container, false);
 
-        tabLayout = view.findViewById(R.id.tabLayout);
         viewPager = view.findViewById(R.id.viewPager);
+        tabLive = view.findViewById(R.id.tabLive);
+        tabNotifications = view.findViewById(R.id.tabNotifications);
+        tabAppliances = view.findViewById(R.id.tabAppliances);
 
         setupViewPager();
+        setupTabs();
 
         // Check for usage stats permission
         checkPermissions();
@@ -45,19 +46,36 @@ public class TrackFragment extends Fragment {
         TrackPagerAdapter adapter = new TrackPagerAdapter(this);
         viewPager.setAdapter(adapter);
 
-        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
-            switch (position) {
-                case 0:
-                    tab.setText(R.string.tab_live);
-                    break;
-                case 1:
-                    tab.setText(R.string.tab_notifications);
-                    break;
-                case 2:
-                    tab.setText(R.string.tab_appliances);
-                    break;
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                updateTabStyles(position);
             }
-        }).attach();
+        });
+    }
+
+    private void setupTabs() {
+        tabLive.setOnClickListener(v -> viewPager.setCurrentItem(0));
+        tabNotifications.setOnClickListener(v -> viewPager.setCurrentItem(1));
+        tabAppliances.setOnClickListener(v -> viewPager.setCurrentItem(2));
+
+        // Set initial style
+        updateTabStyles(0);
+    }
+
+    private void updateTabStyles(int selectedPosition) {
+        TextView[] tabs = {tabLive, tabNotifications, tabAppliances};
+
+        for (int i = 0; i < tabs.length; i++) {
+            if (i == selectedPosition) {
+                tabs[i].setBackgroundResource(R.drawable.bg_button_green);
+                tabs[i].setTextColor(getResources().getColor(android.R.color.white, null));
+            } else {
+                tabs[i].setBackgroundResource(android.R.color.transparent);
+                tabs[i].setTextColor(getResources().getColor(R.color.text_secondary, null));
+            }
+        }
     }
 
     private void checkPermissions() {
@@ -85,4 +103,3 @@ public class TrackFragment extends Fragment {
                 .show();
     }
 }
-

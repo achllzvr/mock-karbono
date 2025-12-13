@@ -377,7 +377,7 @@
                 <LinearLayout
                     android:id="@+id/cardSmartphone"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:orientation="vertical"
                     android:background="@drawable/bg_card_hard_shadow"
@@ -418,7 +418,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp">
+                        <ImageView
+                            android:id="@+id/imgTopApp1"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="8dp"/>
                         <TextView
+                            android:id="@+id/tvTopApp1"
+                            android:layout_toEndOf="@id/imgTopApp1"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="TikTok"
@@ -426,6 +435,7 @@
                             android:textColor="@color/text_secondary"
                             android:textStyle="bold"/>
                         <TextView
+                            android:id="@+id/tvPhoneCarbonValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
@@ -447,7 +457,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp">
+                        <ImageView
+                            android:id="@+id/imgTopApp2"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="8dp"/>
                         <TextView
+                            android:id="@+id/tvTopApp2"
+                            android:layout_toEndOf="@id/imgTopApp2"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Facebook"
@@ -476,7 +495,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="4dp">
+                        <ImageView
+                            android:id="@+id/imgTopApp3"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="8dp"/>
                         <TextView
+                            android:id="@+id/tvTopApp3"
+                            android:layout_toEndOf="@id/imgTopApp3"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Games"
@@ -501,6 +529,11 @@
                         android:progressBackgroundTint="#F5F5F5"
                         android:layout_marginBottom="16dp"/>
 
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -512,7 +545,7 @@
 
                 <FrameLayout
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
                     android:layout_marginStart="8dp"
                     android:clipChildren="false"
@@ -521,7 +554,7 @@
                     <LinearLayout
                         android:id="@+id/cardAppliances"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="vertical"
                         android:background="@drawable/bg_card_hard_shadow"
                         android:padding="16dp">
@@ -642,6 +675,11 @@
                             android:progressTint="#88C057"
                             android:progressBackgroundTint="#F5F5F5"
                             android:layout_marginBottom="16dp"/>
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_weight="1" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -831,4 +869,3 @@
     </ScrollView>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
-

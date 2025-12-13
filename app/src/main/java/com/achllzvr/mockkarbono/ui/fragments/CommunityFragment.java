@@ -124,7 +124,7 @@ public class CommunityFragment extends Fragment {
     // Mock data: Community items
     private List<Community> getCommunities() {
         List<Community> items = new ArrayList<>();
-        items.add(new Community("NULP Eco Club", "5,324 members", R.drawable.img_nulp));
+        items.add(new Community("National University - Lipa", "5,324 members", R.drawable.img_nulp));
         items.add(new Community("SM Cares", "12,120 members", R.drawable.img_sm_cares));
         items.add(new Community("Kaya Founders", "1,500 members", R.drawable.img_kaya_founders));
         items.add(new Community("QBO Innovation", "4,200 members", R.drawable.img_qbo));

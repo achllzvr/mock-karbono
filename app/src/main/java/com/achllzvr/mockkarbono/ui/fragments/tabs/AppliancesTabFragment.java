@@ -16,7 +16,6 @@ import com.achllzvr.mockkarbono.R;
 import com.achllzvr.mockkarbono.db.AppDatabase;
 import com.achllzvr.mockkarbono.db.entities.ApplianceLog;
 import com.achllzvr.mockkarbono.ui.adapters.ApplianceAdapter;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -24,8 +23,8 @@ import java.util.concurrent.Executors;
 public class AppliancesTabFragment extends Fragment {
 
     private TextView tvAppliancesCarbon;
+    private TextView tvActiveAppliancesCount;
     private RecyclerView rvAppliancesPreview;
-    private FloatingActionButton fabAddAppliance;
     private ApplianceAdapter adapter;
     private AppDatabase db;
 
@@ -38,8 +37,8 @@ public class AppliancesTabFragment extends Fragment {
 
         // Bind views
         tvAppliancesCarbon = view.findViewById(R.id.tvAppliancesCarbon);
+        tvActiveAppliancesCount = view.findViewById(R.id.tvActiveAppliancesCount);
         rvAppliancesPreview = view.findViewById(R.id.rvAppliancesPreview);
-        fabAddAppliance = view.findViewById(R.id.fabAddAppliance);
 
         // Setup RecyclerView (preview mode - show top 3)
         adapter = new ApplianceAdapter(null, null); // No edit/delete in preview
@@ -77,10 +76,10 @@ public class AppliancesTabFragment extends Fragment {
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
                     tvAppliancesCarbon.setText(String.format("%.2f kg CO₂", finalTotalCO2));
+                    tvActiveAppliancesCount.setText(String.format("%d active appliances", appliances.size()));
                     adapter.setItems(preview);
                 });
             }
         });
     }
 }
-

@@ -4,18 +4,51 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorBackground">
+    android:background="@color/cream_background">
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+    <LinearLayout
+        android:id="@+id/tabContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorSurface"
-        app:tabTextColor="@color/colorCarbonGray"
-        app:tabSelectedTextColor="@color/colorAccent"
-        app:tabIndicatorColor="@color/colorAccent"
-        app:tabMode="fixed"
-        app:tabGravity="fill" />
+        android:orientation="horizontal"
+        android:layout_margin="16dp"
+        android:padding="8dp"
+        android:background="@drawable/bg_tab_container">
+
+        <TextView
+            android:id="@+id/tabLive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Live"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:paddingVertical="10dp" />
+
+        <TextView
+            android:id="@+id/tabNotifications"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Notifications"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:paddingVertical="10dp"/>
+
+        <TextView
+            android:id="@+id/tabAppliances"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Appliances"
+            android:textSize="12sp"
+            android:textColor="@color/text_secondary"
+            android:gravity="center"
+            android:paddingVertical="10dp"/>
+
+    </LinearLayout>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
@@ -24,4 +57,3 @@
         android:layout_weight="1" />
 
 </LinearLayout>
-
