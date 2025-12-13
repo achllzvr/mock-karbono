@@ -8,6 +8,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,12 +49,15 @@ public class MainActivity extends AppCompatActivity {
     private TextView txtUnsynced;
     private AppUsageAdapter adapter;
     private AppUsageViewModel vm;
+    private ImageView topBarAvatar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.d("(DEBUG) " +TAG, "MainActivity.onCreate");
+
+        topBarAvatar = findViewById(R.id.imgAvatar);
 
         // Firebase anonymous sign-in
         if (FirebaseAuth.getInstance().getCurrentUser() == null) {
@@ -90,6 +94,20 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
+        // Top bar avatar click listener
+        if (topBarAvatar != null) {
+            topBarAvatar.setOnClickListener(v -> {
+                // Navigate to ProfileFragment
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragmentContainer, new ProfileFragment())
+                        .addToBackStack(null) // So user can press back
+                        .commit();
+                // Also select the profile tab in the bottom nav
+                bottomNav.setSelectedItemId(R.id.navigation_profile);
+            });
+        }
+
         // Load default fragment (Dashboard)
         if (savedInstanceState == null) {
             getSupportFragmentManager()
@@ -100,6 +118,12 @@ public class MainActivity extends AppCompatActivity {
 
         // Check permissions on startup
         checkAndRequestPermissions();
+    }
+
+    public void setTopBarAvatarVisibility(int visibility) {
+        if (topBarAvatar != null) {
+            topBarAvatar.setVisibility(visibility);
+        }
     }
 
     private void checkAndRequestPermissions() {

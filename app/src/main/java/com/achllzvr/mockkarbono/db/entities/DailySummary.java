@@ -13,6 +13,8 @@ public class DailySummary {
     public double phoneKgCO2;
     public double applianceKgCO2;
     public double totalKgCO2;
+    public double totalEstimatedKgCO2;
+    public int streak;
     public long clientCreatedAtMs;
     public boolean synced;
 

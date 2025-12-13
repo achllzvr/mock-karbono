@@ -1,4 +1,3 @@
-// app/src/main/java/com/achllzvr/mockkarbono/db/dao/DailySummaryDao.java
 package com.achllzvr.mockkarbono.db.dao;
 
 import androidx.room.Dao;
@@ -29,4 +28,10 @@ public interface DailySummaryDao {
 
     @Query("SELECT COUNT(*) FROM daily_summary WHERE synced = 0")
     int countUnsynced();
+
+    @Query("SELECT SUM(totalEstimatedKgCO2) FROM daily_summary")
+    double getTotalCo2Saved();
+
+    @Query("SELECT streak FROM daily_summary ORDER BY date DESC LIMIT 1")
+    int getCurrentStreak();
 }

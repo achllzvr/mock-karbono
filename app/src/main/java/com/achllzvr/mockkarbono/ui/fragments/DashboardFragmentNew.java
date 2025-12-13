@@ -29,10 +29,13 @@ import com.achllzvr.mockkarbono.db.entities.AppUsage;
 import com.achllzvr.mockkarbono.db.entities.ApplianceLog;
 import com.achllzvr.mockkarbono.db.entities.NotificationEvent;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Executors;
 
@@ -192,11 +195,20 @@ public class DashboardFragmentNew extends Fragment {
             long dayEndMs = dayStartMs + (24 * 60 * 60 * 1000);
 
             // App Usage
-            List<AppUsage> todayUsage = db.appUsageDao().getLatest(100);
+            List<AppUsage> todayUsage = db.appUsageDao().getLatest(1000);
+            Map<String, AppUsage> aggregatedUsage = new HashMap<>();
+
             double phoneCO2 = 0.0;
             for (AppUsage usage : todayUsage) {
                 if (usage.clientCreatedAtMs >= dayStartMs && usage.clientCreatedAtMs < dayEndMs) {
                     phoneCO2 += usage.estimatedKgCO2;
+                    if (aggregatedUsage.containsKey(usage.packageName)) {
+                        AppUsage existingUsage = aggregatedUsage.get(usage.packageName);
+                        existingUsage.durationMs += usage.durationMs;
+                        existingUsage.estimatedKgCO2 += usage.estimatedKgCO2;
+                    } else {
+                        aggregatedUsage.put(usage.packageName, usage);
+                    }
                 }
             }
 
@@ -220,9 +232,8 @@ public class DashboardFragmentNew extends Fragment {
             double totalCO2 = phoneCO2 + applianceCO2;
 
             // Prepare Top Apps list
-            // For now, simple sort or just take first 3 if available
-            Collections.sort(todayUsage, (a, b) -> Double.compare(b.durationMs, a.durationMs));
-            List<AppUsage> topApps = todayUsage.size() > 3 ? todayUsage.subList(0, 3) : todayUsage;
+            List<AppUsage> topApps = new ArrayList<>(aggregatedUsage.values());
+            Collections.sort(topApps, (a, b) -> Double.compare(b.durationMs, a.durationMs));
 
             // Prepare Top Appliances
             Collections.sort(appliances, (a, b) -> Double.compare(b.estimatedKgCO2PerDay, a.estimatedKgCO2PerDay));

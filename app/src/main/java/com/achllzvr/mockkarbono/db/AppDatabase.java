@@ -19,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executors;
 
-@Database(entities = {AppUsage.class, NotificationEvent.class, ApplianceLog.class, DailySummary.class}, version = 1, exportSchema = true)
+@Database(entities = {AppUsage.class, NotificationEvent.class, ApplianceLog.class, DailySummary.class}, version = 2, exportSchema = true)
 public abstract class AppDatabase extends RoomDatabase {
     private static final String DB_NAME = "mockkarbono.db";
     private static volatile AppDatabase instance;
