@@ -70,9 +70,15 @@ public class CommunityAdapter extends RecyclerView.Adapter<CommunityAdapter.View
             if (tvDesc != null) tvDesc.setText(item.getDescription());
             
             if (imgCommunity != null) {
+                // Fix: Clear the view first to prevent recycling issues
+                Glide.with(itemView.getContext()).clear(imgCommunity);
+                
                 Glide.with(itemView.getContext())
                     .load(item.getImageResId())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    // Fix: Disable cache to ensure the correct image asset is loaded 
+                    // (solves issue where updated assets show old cached versions)
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
                     .centerCrop()
                     .into(imgCommunity);
             }

@@ -263,11 +263,13 @@
             </LinearLayout>
 
             <!-- Mascot Section with Leaves Container -->
-            <FrameLayout
+            <!-- Changed from FrameLayout to RelativeLayout to position bubble relative to mascot -->
+            <RelativeLayout
                 android:id="@+id/mascotContainer"
                 android:layout_width="match_parent"
-                android:layout_height="220dp"
-                android:layout_marginHorizontal="16dp">
+                android:layout_height="300dp"
+                android:layout_marginHorizontal="16dp"
+                android:clipChildren="false">
 
                 <!-- Falling Leaves Container (for particle effect) -->
                 <FrameLayout
@@ -275,41 +277,45 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <!-- Mascot Image -->
-                <ImageView
-                    android:id="@+id/imgMascot"
-                    android:layout_width="180dp"
-                    android:layout_height="180dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/mascot_happy"
-                    android:scaleType="fitCenter"
-                    android:contentDescription="Karbono Mascot" />
-
                 <!-- Speech Bubble -->
+                <!-- Moved above the mascot, positioned to the side -->
                 <LinearLayout
                     android:id="@+id/speechBubble"
-                    android:layout_width="wrap_content"
+                    android:layout_width="160dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="top|end"
-                    android:layout_marginTop="20dp"
-                    android:layout_marginEnd="24dp"
+                    android:layout_above="@id/imgMascot"
+                    android:layout_toEndOf="@id/imgMascot"
+                    android:layout_marginStart="-60dp"
+                    android:layout_marginBottom="-10dp"
                     android:background="@drawable/bg_speech_bubble"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="12dp"
+                    android:elevation="4dp">
 
                     <TextView
                         android:id="@+id/tvMascotMessage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Looking good! 🌱"
-                        android:textSize="14sp"
+                        android:textSize="13sp"
                         android:textColor="@color/text_dark"
-                        android:textStyle="bold"
-                        android:maxWidth="140dp" />
+                        android:textStyle="bold" />
 
                 </LinearLayout>
 
-            </FrameLayout>
+                <!-- Mascot Image -->
+                <ImageView
+                    android:id="@+id/imgMascot"
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_centerInParent="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="20dp"
+                    android:src="@drawable/mascot_happy"
+                    android:scaleType="fitCenter"
+                    android:contentDescription="Karbono Mascot" />
+
+            </RelativeLayout>
 
             <!-- Today's Carbon Display -->
             <LinearLayout
@@ -691,6 +697,7 @@
                     </LinearLayout>
 
                     <androidx.cardview.widget.CardView
+                        android:id="@+id/btnReferences"
                         android:layout_width="32dp"
                         android:layout_height="32dp"
                         android:layout_gravity="top|end"

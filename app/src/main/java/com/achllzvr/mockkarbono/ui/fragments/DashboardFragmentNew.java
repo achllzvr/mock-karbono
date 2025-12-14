@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -28,6 +29,7 @@ import com.achllzvr.mockkarbono.db.AppDatabase;
 import com.achllzvr.mockkarbono.db.entities.AppUsage;
 import com.achllzvr.mockkarbono.db.entities.ApplianceLog;
 import com.achllzvr.mockkarbono.db.entities.NotificationEvent;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -69,12 +71,18 @@ public class DashboardFragmentNew extends Fragment {
     private ImageButton[] seedButtons = new ImageButton[7];
     private LinearLayout cardSmartphone;
     private LinearLayout cardAppliances;
+    private CardView btnReferences;
 
     // Animation handlers
     private Handler animationHandler = new Handler(Looper.getMainLooper());
     private AnimatorSet breathingAnimator;
     private boolean isAnimating = false;
     private String currentState = STATE_HAPPY;
+    private double currentCarbonUsage = 0.0;
+
+    // Blinking handler
+    private Handler blinkHandler = new Handler(Looper.getMainLooper());
+    private Runnable blinkRunnable;
 
     private AppDatabase db;
     private Random random = new Random();
@@ -109,6 +117,8 @@ public class DashboardFragmentNew extends Fragment {
         // Bind top texts inside cards (layout doesn't provide explicit IDs for inner TextViews)
         cardSmartphone = view.findViewById(R.id.cardSmartphone);
         cardAppliances = view.findViewById(R.id.cardAppliances);
+        
+        btnReferences = view.findViewById(R.id.btnReferences);
 
         try {
             // Updated binding logic for new dashboard layout with app icons
@@ -156,9 +166,9 @@ public class DashboardFragmentNew extends Fragment {
             });
         }
 
-        // Mascot tap - Easter egg
+        // Mascot tap
         imgMascot.setOnClickListener(v -> {
-            tvMascotMessage.setText(getRandomMascotMessage());
+            tvMascotMessage.setText(getMascotMessage(currentState, currentCarbonUsage));
             startBounceAnimation();
         });
 
@@ -185,6 +195,22 @@ public class DashboardFragmentNew extends Fragment {
                 transaction.commit();
             });
         }
+        
+        // Show references bottom sheet
+        if (btnReferences != null) {
+            btnReferences.setOnClickListener(v -> showReferencesBottomSheet());
+        }
+    }
+    
+    private void showReferencesBottomSheet() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(requireContext());
+        View bottomSheetView = getLayoutInflater().inflate(R.layout.layout_references_bottom_sheet, null);
+        bottomSheetDialog.setContentView(bottomSheetView);
+        
+        ImageView btnClose = bottomSheetView.findViewById(R.id.btnClose);
+        btnClose.setOnClickListener(v -> bottomSheetDialog.dismiss());
+        
+        bottomSheetDialog.show();
     }
 
     private void loadDashboardData() {
@@ -357,27 +383,24 @@ public class DashboardFragmentNew extends Fragment {
      * Updates mascot image and starts appropriate animation based on carbon usage
      */
     public void updateMascotState(double carbonUsage) {
+        this.currentCarbonUsage = carbonUsage;
         String newState;
-        String message;
         int mascotRes;
 
         if (carbonUsage <= THRESHOLD_WARNING) {
             newState = STATE_HAPPY;
-            message = getHappyMessage();
             mascotRes = R.drawable.mascot_happy;
         } else if (carbonUsage <= THRESHOLD_CRITICAL) {
             newState = STATE_WARNING;
-            message = getWarningMessage();
             mascotRes = R.drawable.mascot_warning;
         } else {
             newState = STATE_CRITICAL;
-            message = getCriticalMessage();
             mascotRes = R.drawable.mascot_critical;
         }
 
-        // Update mascot image
+        // Update mascot image and text
         imgMascot.setImageResource(mascotRes);
-        tvMascotMessage.setText(message);
+        tvMascotMessage.setText(getMascotMessage(newState, carbonUsage));
         currentState = newState;
 
         // Start appropriate animation
@@ -387,16 +410,49 @@ public class DashboardFragmentNew extends Fragment {
             case STATE_HAPPY:
                 startBreathingAnimation();
                 startFallingLeaves(STATE_HAPPY);
+                startBlinkingAnimation(R.drawable.mascot_happy, R.drawable.mascot_happy_blink);
                 break;
             case STATE_WARNING:
                 startBreathingAnimation();
                 startFallingLeaves(STATE_WARNING);
+                startBlinkingAnimation(R.drawable.mascot_warning, R.drawable.mascot_warning_blink);
                 break;
             case STATE_CRITICAL:
                 startShakeAnimation();
                 startFallingLeaves(STATE_CRITICAL);
+                startBlinkingAnimation(R.drawable.mascot_critical, R.drawable.mascot_critical_blink);
                 break;
         }
+    }
+
+    private void startBlinkingAnimation(int normalRes, int blinkRes) {
+        if (blinkHandler == null) blinkHandler = new Handler(Looper.getMainLooper());
+        
+        blinkHandler.removeCallbacksAndMessages(null);
+        
+        blinkRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (!isAdded() || imgMascot == null) return;
+                
+                // Blink closed
+                imgMascot.setImageResource(blinkRes);
+                
+                // Open eyes after short duration
+                new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                    if (isAdded() && imgMascot != null) {
+                        imgMascot.setImageResource(normalRes);
+                    }
+                }, 150);
+                
+                // Schedule next blink at random interval (2-4 seconds)
+                int nextBlinkDelay = 2000 + random.nextInt(2000);
+                blinkHandler.postDelayed(this, nextBlinkDelay);
+            }
+        };
+        
+        // Start blinking
+        blinkHandler.post(blinkRunnable);
     }
 
     /**
@@ -537,47 +593,58 @@ public class DashboardFragmentNew extends Fragment {
             breathingAnimator.cancel();
         }
         animationHandler.removeCallbacksAndMessages(null);
+        if (blinkHandler != null) {
+            blinkHandler.removeCallbacksAndMessages(null);
+        }
         if (leavesContainer != null) {
             leavesContainer.removeAllViews();
         }
     }
 
-    private String getHappyMessage() {
-        String[] messages = {
-            "Looking good! 🌱",
-            "Keep it up! 🌿",
-            "Eco warrior! 💚",
-            "Planet thanks you! 🌍"
-        };
-        return messages[random.nextInt(messages.length)];
-    }
-
-    private String getWarningMessage() {
-        String[] messages = {
-            "Slow down a bit 🌻",
-            "Take a break? ☀️",
-            "Almost at limit! 📊"
-        };
-        return messages[random.nextInt(messages.length)];
-    }
-
-    private String getCriticalMessage() {
-        String[] messages = {
-            "Too much carbon! 🔥",
-            "Time to unplug! ⚡",
-            "Let's reduce! 🌡️"
-        };
-        return messages[random.nextInt(messages.length)];
-    }
-
-    private String getRandomMascotMessage() {
-        String[] messages = {
-            "Hi there! 👋",
-            "You got this! 💪",
-            "*happy plant noises*",
-            "🌱🌱🌱"
-        };
-        return messages[random.nextInt(messages.length)];
+    private String getMascotMessage(String state, double carbonUsage) {
+        int index = random.nextInt(3);
+        double saved = Math.max(0, THRESHOLD_CRITICAL - carbonUsage);
+        
+        // Conversions
+        double drivingKm = saved / 0.2; // approx 0.2 kg/km
+        double smartphones = saved / 0.015; // approx 15g to charge
+        double trees = saved / 0.06; // approx 60g absorbed per day
+        double usageDrivingKm = carbonUsage / 0.2;
+        
+        switch (state) {
+            case STATE_HAPPY:
+                switch (index) {
+                    case 0:
+                        return String.format(Locale.US, "You're saving %.1f kg CO2! That's like not driving for %.1f kms 🚗", saved, drivingKm);
+                    case 1:
+                        return String.format(Locale.US, "Great job! %.1f kg CO2 saved is equivalent to charging %.0f smartphones! 📱", saved, smartphones);
+                    case 2:
+                        return String.format(Locale.US, "You've saved %.1f kg CO2 today! That's the same as planting %.1f trees! 🌳", saved, trees);
+                }
+                break;
+            case STATE_WARNING:
+                switch (index) {
+                    case 0:
+                        return "Did you know using Tiktok for 30 mins equals to driving 0.2 kms? No? I see... 📉";
+                    case 1:
+                        return String.format(Locale.US, "You've emitted %.1f kg CO2. That's like driving %.1f km! Time to slow down. 🚶", carbonUsage, usageDrivingKm);
+                    case 2:
+                        return "Streaming HD video for 1 hour creates ~0.4 kg CO2. Watch out! 📺";
+                }
+                break;
+            case STATE_CRITICAL:
+                switch (index) {
+                    case 0:
+                        return "I need... tree... revive... buy one from the shop... 😵";
+                    case 1:
+                        return String.format(Locale.US, "%.1f kg CO2... that's like driving %.1f km... I'm choking... 🌫️", carbonUsage, usageDrivingKm);
+                    case 2:
+                        return "System overheating... please... reduce... usage... 🔥";
+                }
+                break;
+        }
+        
+        return "🌱";
     }
 
     @Override
