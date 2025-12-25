@@ -1,5 +1,6 @@
 package com.achllzvr.mockkarbono.ui.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,86 +11,87 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.achllzvr.mockkarbono.R;
+import com.achllzvr.mockkarbono.api.data.models.TreeModel;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
-public class MarketplaceAdapter extends RecyclerView.Adapter<MarketplaceAdapter.ViewHolder> {
+public class MarketplaceAdapter extends RecyclerView.Adapter<MarketplaceAdapter.TreeViewHolder> {
 
-    private List<MarketItem> items;
-    private final OnItemClickListener listener;
+    // Initialize with empty list to prevent initial null crash
+    private List<TreeModel> treeList = new ArrayList<>();
+    private Context context;
 
-    public interface OnItemClickListener {
-        void onItemClick(MarketItem item);
-    }
-
-    public MarketplaceAdapter(List<MarketItem> items, OnItemClickListener listener) {
-        this.items = items;
-        this.listener = listener;
-    }
-
-    public void updateItems(List<MarketItem> newItems) {
-        this.items = newItems;
+    public void setTrees(List<TreeModel> trees) {
+        // SAFETY CHECK: If trees is null, use an empty list instead
+        this.treeList = (trees != null) ? trees : new ArrayList<>();
         notifyDataSetChanged();
     }
 
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // ✅ CRITICAL: Ensure this points to your NEW GRID layout file
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_marketplace_grid, parent, false);
-        return new ViewHolder(view);
+    public TreeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        context = parent.getContext();
+        View view = LayoutInflater.from(context).inflate(R.layout.item_marketplace_grid, parent, false);
+        return new TreeViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(items.get(position), listener);
+    public void onBindViewHolder(@NonNull TreeViewHolder holder, int position) {
+        TreeModel tree = treeList.get(position);
+
+        holder.tvName.setText(tree.name);
+
+        // Handle Price
+        if (tree.price != null) {
+            double priceUsd = tree.price.usdCents / 100.0;
+            holder.tvPrice.setText(String.format(Locale.US, "$%.2f", priceUsd));
+        } else {
+            holder.tvPrice.setText("$0.00");
+        }
+
+        // Handle CO2 Text
+        holder.tvImpact.setText(String.format(Locale.US, "-%.0f kg CO₂", tree.co2Kg));
+
+        // Handle Location
+        if (tree.location != null) {
+            holder.tvLocation.setText(tree.location.country);
+        } else {
+            holder.tvLocation.setText("Global");
+        }
+
+        // Image Loading with Glide
+        if (tree.imageUrl != null && !tree.imageUrl.isEmpty()) {
+            Glide.with(context)
+                    .load(tree.imageUrl)
+                    .placeholder(R.drawable.ic_tree) // Make sure this drawable exists!
+                    .centerCrop()
+                    .into(holder.imgTree);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return items.size();
+        // Double safety check
+        return (treeList != null) ? treeList.size() : 0;
     }
 
-    // ✅ Renamed to standard 'ViewHolder' to match the class definition
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgItem;
-        TextView tvTitle;
-        TextView tvDesc;
-        TextView tvLocation;
-        Button btnAction;
+    static class TreeViewHolder extends RecyclerView.ViewHolder {
+        ImageView imgTree;
+        TextView tvName, tvPrice, tvImpact, tvLocation;
+        Button btnPlant;
 
-        public ViewHolder(@NonNull View itemView) {
+        public TreeViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Match these IDs with your 'item_marketplace_grid.xml'
-            imgItem = itemView.findViewById(R.id.imgMarketItem);
-            tvTitle = itemView.findViewById(R.id.tvItemTitle);
-            tvDesc = itemView.findViewById(R.id.tvItemDescription);
+            imgTree = itemView.findViewById(R.id.imgTree);
+            tvName = itemView.findViewById(R.id.tvTreeName);
+            tvPrice = itemView.findViewById(R.id.tvPrice);
+            tvImpact = itemView.findViewById(R.id.tvImpact);
             tvLocation = itemView.findViewById(R.id.tvLocation);
-            btnAction = itemView.findViewById(R.id.btnAction); // Ensure XML has this ID, not 'btnBuyItem'
-        }
-
-        public void bind(final MarketItem item, final OnItemClickListener listener) {
-            // Null checks to prevent crashes if a view is missing in XML
-            if (tvTitle != null) tvTitle.setText(item.getTitle());
-            if (tvDesc != null) tvDesc.setText(item.getDescription());
-            if (imgItem != null) imgItem.setImageResource(item.getImageResId());
-
-            if (btnAction != null) {
-                btnAction.setText(item.getPrice());
-                btnAction.setOnClickListener(v -> listener.onItemClick(item));
-            }
-
-            if (tvLocation != null) {
-                // Simple logic for demo location
-                if (item.getTitle().contains("Palawan")) tvLocation.setText("Palawan");
-                else if (item.getTitle().contains("Cebu")) tvLocation.setText("Cebu");
-                else if (item.getTitle().contains("Mindanao")) tvLocation.setText("Davao");
-                else tvLocation.setText("PH");
-            }
-
-            itemView.setOnClickListener(v -> listener.onItemClick(item));
+            btnPlant = itemView.findViewById(R.id.btnPlant);
         }
     }
 }

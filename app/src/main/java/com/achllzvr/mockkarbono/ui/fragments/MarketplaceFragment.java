@@ -1,153 +1,200 @@
 package com.achllzvr.mockkarbono.ui.fragments;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.achllzvr.mockkarbono.R;
+import com.achllzvr.mockkarbono.api.ApiClient;
+import com.achllzvr.mockkarbono.api.data.models.TreeModel;
+import com.achllzvr.mockkarbono.api.data.models.TreeResponse;
 import com.achllzvr.mockkarbono.ui.adapters.MarketplaceAdapter;
-import com.achllzvr.mockkarbono.ui.adapters.MarketItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Marketplace Fragment - Soft Pop / Duolingo Style
- * Displays tree planting, appliances, and thrift items for carbon offset
- */
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MarketplaceFragment extends Fragment {
 
-    private RecyclerView rvMarketplaceItems;
-    private MarketplaceAdapter adapter;
+    // IMPORTANT: Make sure this is your generated key from Evertreen Dashboard
+    private static final String API_KEY = "61bc4bcf-230a-4531-96fd-0ec9296bdf62";
 
+    // Views
+    private RecyclerView recyclerView;
+    private MarketplaceAdapter adapter;
+    private ProgressBar progressBar;
+    private TextView tvError;
+    private TextView tvEmpty;
+    private LinearLayout llPartnerLabel;
+
+    // Tabs
     private TextView tabPlantTrees;
     private TextView tabAppliances;
     private TextView tabThrift;
-    private LinearLayout llPartnerLabel;
 
-    private int currentTab = 0; // 0 = Plant Trees, 1 = Appliances, 2 = Thrift
+    // State
+    private int currentTab = 0; // 0=Trees, 1=Appliances, 2=Thrift
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_marketplace, container, false);
 
-        // Bind views
-        rvMarketplaceItems = view.findViewById(R.id.rvMarketplaceItems);
+        // Bind Views
+        recyclerView = view.findViewById(R.id.recyclerMarketplace);
+        progressBar = view.findViewById(R.id.progressBar);
+        tvError = view.findViewById(R.id.tvError);
+        tvEmpty = view.findViewById(R.id.tvEmpty);
+        llPartnerLabel = view.findViewById(R.id.llPartnerLabel);
+
+        // Bind Tabs
         tabPlantTrees = view.findViewById(R.id.tabPlantTrees);
         tabAppliances = view.findViewById(R.id.tabAppliances);
         tabThrift = view.findViewById(R.id.tabThrift);
-        llPartnerLabel = view.findViewById(R.id.llPartnerLabel);
 
-        // Setup RecyclerView
-        rvMarketplaceItems.setLayoutManager(new androidx.recyclerview.widget.GridLayoutManager(requireContext(), 2));
-        adapter = new MarketplaceAdapter(getTreeItems(), item -> {
-            Toast.makeText(requireContext(), "Added to cart: " + item.getTitle(), Toast.LENGTH_SHORT).show();
-        });
-        rvMarketplaceItems.setAdapter(adapter);
+        // Setup Recycler
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        adapter = new MarketplaceAdapter();
+        recyclerView.setAdapter(adapter);
 
-        // Setup tab click listeners
-        setupTabListeners();
+        // Setup Tab Clicks
+        setupTabs();
+
+        // Load Initial Data (Trees)
+        selectTab(0);
 
         return view;
     }
 
-    private void setupTabListeners() {
-        tabPlantTrees.setOnClickListener(v -> {
-            setActiveTab(0);
-            adapter.updateItems(getTreeItems());
-        });
-
-        tabAppliances.setOnClickListener(v -> {
-            setActiveTab(1);
-            adapter.updateItems(getApplianceItems());
-        });
-
-        tabThrift.setOnClickListener(v -> {
-            setActiveTab(2);
-            adapter.updateItems(getThriftItems());
-        });
+    private void setupTabs() {
+        tabPlantTrees.setOnClickListener(v -> selectTab(0));
+        tabAppliances.setOnClickListener(v -> selectTab(1));
+        tabThrift.setOnClickListener(v -> selectTab(2));
     }
 
-    private void setActiveTab(int tabIndex) {
-        currentTab = tabIndex;
+    private void selectTab(int index) {
+        currentTab = index;
 
-        // Reset all tabs to inactive state
-        tabPlantTrees.setBackgroundResource(android.R.color.transparent);
-        tabPlantTrees.setTextColor(getResources().getColor(R.color.text_secondary, null));
-        tabAppliances.setBackgroundResource(android.R.color.transparent);
-        tabAppliances.setTextColor(getResources().getColor(R.color.text_secondary, null));
-        tabThrift.setBackgroundResource(android.R.color.transparent);
-        tabThrift.setTextColor(getResources().getColor(R.color.text_secondary, null));
+        // 1. Reset UI State
+        resetTabStyles();
+        tvError.setVisibility(View.GONE);
+        tvEmpty.setVisibility(View.GONE);
+        progressBar.setVisibility(View.GONE);
 
-        // Set active tab
-        TextView activeTab;
-        switch (tabIndex) {
-            case 1:
-                activeTab = tabAppliances;
-                break;
-            case 2:
-                activeTab = tabThrift;
-                break;
-            default:
-                activeTab = tabPlantTrees;
-                break;
+        // 2. Highlight Selected Tab
+        TextView selectedView = null;
+        switch (index) {
+            case 0: selectedView = tabPlantTrees; break;
+            case 1: selectedView = tabAppliances; break;
+            case 2: selectedView = tabThrift; break;
         }
-        activeTab.setBackgroundResource(R.drawable.bg_button_green);
-        activeTab.setTextColor(getResources().getColor(android.R.color.white, null));
 
-        // Hide Tree Partner on other tabs
-        if (tabIndex == 0) {
-            // Tab 0 is "Plant Trees" -> Show the label
-            if (llPartnerLabel != null) llPartnerLabel.setVisibility(View.VISIBLE);
-        } else {
-            // Tab 1 or 2 (Appliances/Thrift) -> Hide the label
-            if (llPartnerLabel != null) llPartnerLabel.setVisibility(View.GONE);
+        if (selectedView != null) {
+            selectedView.setTextColor(ContextCompat.getColor(requireContext(), R.color.matcha_green));
+            selectedView.setBackgroundResource(R.drawable.bg_pill_green); // Ensure you have a selected background drawable or just change text color
+            // For simple text-only switching without custom drawables:
+            selectedView.setTypeface(null, android.graphics.Typeface.BOLD);
+        }
+
+        // 3. Load Content
+        switch (index) {
+            case 0: // Trees
+                llPartnerLabel.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.VISIBLE);
+                fetchTrees();
+                break;
+            case 1: // Appliances
+                llPartnerLabel.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                showComingSoon("Eco-Friendly Appliances coming soon!");
+                break;
+            case 2: // Thrift
+                llPartnerLabel.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.GONE);
+                showComingSoon("Local Thrift Shops coming soon!");
+                break;
         }
     }
 
-    // Mock data: Tree items
-    private List<MarketItem> getTreeItems() {
-        List<MarketItem> items = new ArrayList<>();
-        // ✅ CHANGED: Now pointing to specific images instead of ic_tree
-        items.add(new MarketItem("Mango Tree", "Offsets 12kg CO₂/year", "₱500 + 🌳 2", R.drawable.img_mango_tree));
-        items.add(new MarketItem("Narra Tree", "Offsets 18kg CO₂/year • Native", "₱750 + 🌳 3", R.drawable.img_narra_tree));
-        items.add(new MarketItem("Coconut Palm", "Offsets 8kg CO₂/year", "₱350 + 🌳 1", R.drawable.img_coconut_tree));
-        items.add(new MarketItem("Bamboo Grove", "Offsets 25kg CO₂/year • Fast growing", "₱600 + 🌳 4", R.drawable.img_bamboo_tree));
-        items.add(new MarketItem("Acacia Tree", "Offsets 15kg CO₂/year", "₱450 + 🌳 2", R.drawable.img_acacia_tree));
-        return items;
+    private void resetTabStyles() {
+        int defaultColor = ContextCompat.getColor(requireContext(), R.color.text_secondary);
+
+        tabPlantTrees.setTextColor(defaultColor);
+        tabPlantTrees.setTypeface(null, android.graphics.Typeface.NORMAL);
+        tabPlantTrees.setBackground(null);
+
+        tabAppliances.setTextColor(defaultColor);
+        tabAppliances.setTypeface(null, android.graphics.Typeface.NORMAL);
+        tabAppliances.setBackground(null);
+
+        tabThrift.setTextColor(defaultColor);
+        tabThrift.setTypeface(null, android.graphics.Typeface.NORMAL);
+        tabThrift.setBackground(null);
     }
 
-    // Mock data: Appliance items
-    private List<MarketItem> getApplianceItems() {
-        List<MarketItem> items = new ArrayList<>();
-        items.add(new MarketItem("Solar Panel Kit", "Saves 50kg CO₂/month", "₱15,000 + 🌳 10", R.drawable.img_solar_panel));
-        items.add(new MarketItem("LED Bulb Pack (10)", "Saves 5kg CO₂/month", "₱500 + 🌳 1", R.drawable.img_lightbulb));
-        items.add(new MarketItem("Smart Thermostat", "Saves 8kg CO₂/month", "₱3,500 + 🌳 3", R.drawable.img_thermostat));
-        items.add(new MarketItem("Energy Monitor", "Track your usage", "₱1,200 + 🌳 1", R.drawable.img_energy_monitor));
-        items.add(new MarketItem("Inverter AC Unit", "40% more efficient", "₱25,000 + 🌳 15", R.drawable.img_ac));
-        return items;
+    private void showComingSoon(String message) {
+        tvEmpty.setText(message);
+        tvEmpty.setVisibility(View.VISIBLE);
+        // Optional: Set a specific icon for empty state if you have one
     }
 
-    // Mock data: Thrift items
-    private List<MarketItem> getThriftItems() {
-        List<MarketItem> items = new ArrayList<>();
-        items.add(new MarketItem("Vintage Denim Jacket", "Size M • Like new", "₱450 + 🌳 1", R.drawable.img_jacket));
-        items.add(new MarketItem("Preloved Sneakers", "Size 42 • Good condition", "₱800 + 🌳 1", R.drawable.img_sneakers));
-        items.add(new MarketItem("Eco-friendly Tote Bag", "Handmade • Organic cotton", "₱250 + 🌳 1", R.drawable.img_bag));
-        items.add(new MarketItem("Refurbished Tablet", "Works perfectly", "₱5,000 + 🌳 3", R.drawable.img_tablet));
-        items.add(new MarketItem("Upcycled Furniture", "Unique piece", "₱2,500 + 🌳 2", R.drawable.img_furniture));
-        return items;
+    private void fetchTrees() {
+        // Only fetch if we are on the tree tab
+        if (currentTab != 0) return;
+
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE); // Hide while loading
+
+        ApiClient.getService().getTrees(API_KEY).enqueue(new Callback<TreeResponse>() {
+            @Override
+            public void onResponse(Call<TreeResponse> call, Response<TreeResponse> response) {
+                // Check if user switched tabs while loading
+                if (currentTab != 0) return;
+
+                progressBar.setVisibility(View.GONE);
+
+                if (response.isSuccessful() && response.body() != null) {
+                    List<TreeModel> trees = response.body().trees;
+
+                    if (trees != null && !trees.isEmpty()) {
+                        adapter.setTrees(trees);
+                        recyclerView.setVisibility(View.VISIBLE);
+                    } else {
+                        tvEmpty.setText("No trees available right now.");
+                        tvEmpty.setVisibility(View.VISIBLE);
+                    }
+                } else {
+                    String errorMsg = "Error: " + response.code();
+                    if (response.code() == 401) errorMsg += "\n(Check API Key)";
+                    tvError.setText(errorMsg);
+                    tvError.setVisibility(View.VISIBLE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TreeResponse> call, Throwable t) {
+                if (currentTab != 0) return;
+
+                progressBar.setVisibility(View.GONE);
+                tvError.setText("Connection Failed");
+                tvError.setVisibility(View.VISIBLE);
+            }
+        });
     }
 }
-
