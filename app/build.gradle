@@ -27,6 +27,17 @@ android {
         }
 
         vectorDrawables.useSupportLibrary = true
+
+        // Read from gradle.properties, fallback to empty string if missing
+        def evertreenKey = project.hasProperty("EVERTREEN_API_KEY") ? project.property("EVERTREEN_API_KEY") : ""
+
+        // Create a Java constant named EVERTREEN_API_KEY
+        buildConfigField "String", "EVERTREEN_API_KEY", "$evertreenKey"
+    }
+
+    // Enable BuildConfig generation (needed for newer AGP versions)
+    buildFeatures {
+        buildConfig true
     }
 
     buildTypes {
@@ -45,6 +56,7 @@ android {
     buildFeatures {
         compose true
     }
+
 }
 
 dependencies {

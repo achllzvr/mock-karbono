@@ -14,15 +14,17 @@
         android:theme="@style/AppTheme"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round">
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            >
+
+        <activity android:name=".SplashActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".MainActivity" android:exported="false" />
+
+        <activity android:name=".OnboardingActivity" android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
 
         <service
             android:exported="true"

@@ -23,6 +23,7 @@ import com.achllzvr.mockkarbono.api.ApiClient;
 import com.achllzvr.mockkarbono.api.data.models.TreeModel;
 import com.achllzvr.mockkarbono.api.data.models.TreeResponse;
 import com.achllzvr.mockkarbono.ui.adapters.MarketplaceAdapter;
+import com.achllzvr.mockkarbono.BuildConfig;
 
 import java.util.List;
 
@@ -33,7 +34,7 @@ import retrofit2.Response;
 public class MarketplaceFragment extends Fragment {
 
     // IMPORTANT: Make sure this is your generated key from Evertreen Dashboard
-    private static final String API_KEY = "61bc4bcf-230a-4531-96fd-0ec9296bdf62";
+    private static final String API_KEY = BuildConfig.EVERTREEN_API_KEY;
 
     // Views
     private RecyclerView recyclerView;
