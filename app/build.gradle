@@ -108,6 +108,9 @@ dependencies {
     implementation libs.github.glide
     annotationProcessor libs.compiler
 
+    // TapTargetView for In-App Tutorial
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.3'
+
     implementation libs.androidx.constraintlayout.v214
     implementation libs.androidx.recyclerview
     implementation libs.androidx.coordinatorlayout

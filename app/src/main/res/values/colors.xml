@@ -67,4 +67,6 @@
     <!-- Badge backgrounds -->
     <color name="badge_unlocked_bg">#FFF4D6</color>
     <color name="badge_locked_bg">#F0F0F0</color>
+    <color name="black">#000000</color>
+    <color name="white">#EEEEEE</color>
 </resources>

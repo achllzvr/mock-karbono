@@ -16,6 +16,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,7 +33,9 @@ import com.achllzvr.mockkarbono.db.AppDatabase;
 import com.achllzvr.mockkarbono.db.entities.AppUsage;
 import com.achllzvr.mockkarbono.db.entities.ApplianceLog;
 import com.achllzvr.mockkarbono.db.entities.NotificationEvent;
+import com.achllzvr.mockkarbono.utils.PrefsManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.achllzvr.mockkarbono.utils.TutorialManager;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -91,6 +95,9 @@ public class DashboardFragmentNew extends Fragment {
     private boolean isAnimating = false;
     private String currentState = STATE_HAPPY;
     private double currentCarbonUsage = 0.0;
+    private RelativeLayout mascotContainer;
+    private PrefsManager prefsManager;
+    private ScrollView dashboardScrollView;
 
     // Blinking handler
     private Handler blinkHandler = new Handler(Looper.getMainLooper());
@@ -106,6 +113,18 @@ public class DashboardFragmentNew extends Fragment {
 
         db = AppDatabase.getInstance(requireContext());
 
+        prefsManager = new PrefsManager(requireContext());
+
+        // --- ADD THIS LINE TEMPORARILY ---
+        prefsManager.setDashboardTutorialSeen(false);
+        // ---------------------------------
+
+        // Initialize Views (Ensure these IDs exist in your XML)
+        mascotContainer = view.findViewById(R.id.mascotContainer);
+        tvTodayCarbon = view.findViewById(R.id.tvTodayCarbon);
+        cardSmartphone = view.findViewById(R.id.cardSmartphone);
+        dashboardScrollView = view.findViewById(R.id.dashboardScrollView);
+
         // Bind views
         bindViews(view);
 
@@ -116,6 +135,36 @@ public class DashboardFragmentNew extends Fragment {
         loadDashboardData();
 
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        // Check and Show Tutorial
+        if (!prefsManager.isDashboardTutorialSeen()) {
+            // We use a small delay to ensure views are laid out and ready
+            view.postDelayed(this::startTutorial, 500);
+        }
+    }
+
+    private void startTutorial() {
+        if (getActivity() == null) return;
+
+        new TutorialManager(getActivity())
+                .withScrollView(dashboardScrollView) // <--- CRITICAL UPDATE
+                .addStep(mascotContainer,
+                        "Your Eco-Companion",
+                        "Karbo reacts to your habits! Tap here to see his status.")
+                .addStep(tvTodayCarbon,
+                        "Daily Limit",
+                        "Keep your emissions below 6.8kg today.")
+                .addStep(cardSmartphone,
+                        "Track Activity",
+                        "Tap a card to log usage manually or view details.")
+                .start(() -> {
+                    prefsManager.setDashboardTutorialSeen(true);
+                });
     }
 
     private void bindViews(View view) {

@@ -8,6 +8,10 @@ public class PrefsManager {
     private static final String KEY_IS_FIRST_RUN = "is_first_run";
     private static final String KEY_ONBOARDING_COMPLETED = "onboarding_completed";
 
+    // New keys for tutorials
+    private static final String KEY_TUTORIAL_DASHBOARD_SEEN = "tutorial_dashboard_seen";
+    private static final String KEY_TUTORIAL_TRACK_SEEN = "tutorial_track_seen";
+
     private SharedPreferences prefs;
 
     public PrefsManager(Context context) {
@@ -28,5 +32,22 @@ public class PrefsManager {
 
     public void setOnboardingCompleted(boolean completed) {
         prefs.edit().putBoolean(KEY_ONBOARDING_COMPLETED, completed).apply();
+    }
+
+    // Tutorial Getters/Setters
+    public boolean isDashboardTutorialSeen() {
+        return prefs.getBoolean(KEY_TUTORIAL_DASHBOARD_SEEN, false);
+    }
+
+    public void setDashboardTutorialSeen(boolean seen) {
+        prefs.edit().putBoolean(KEY_TUTORIAL_DASHBOARD_SEEN, seen).apply();
+    }
+
+    public boolean isTrackTutorialSeen() {
+        return prefs.getBoolean(KEY_TUTORIAL_TRACK_SEEN, false);
+    }
+
+    public void setTrackTutorialSeen(boolean seen) {
+        prefs.edit().putBoolean(KEY_TUTORIAL_TRACK_SEEN, seen).apply();
     }
 }
