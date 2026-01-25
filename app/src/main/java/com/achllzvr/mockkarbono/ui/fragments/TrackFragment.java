@@ -21,7 +21,7 @@ import com.achllzvr.mockkarbono.ui.adapters.TrackPagerAdapter;
 public class TrackFragment extends Fragment {
 
     private ViewPager2 viewPager;
-    private TextView tabLive, tabNotifications, tabAppliances;
+    private TextView tabLive, tabNotifications;
 
     @Nullable
     @Override
@@ -31,7 +31,6 @@ public class TrackFragment extends Fragment {
         viewPager = view.findViewById(R.id.viewPager);
         tabLive = view.findViewById(R.id.tabLive);
         tabNotifications = view.findViewById(R.id.tabNotifications);
-        tabAppliances = view.findViewById(R.id.tabAppliances);
 
         setupViewPager();
         setupTabs();
@@ -58,14 +57,13 @@ public class TrackFragment extends Fragment {
     private void setupTabs() {
         tabLive.setOnClickListener(v -> viewPager.setCurrentItem(0));
         tabNotifications.setOnClickListener(v -> viewPager.setCurrentItem(1));
-        tabAppliances.setOnClickListener(v -> viewPager.setCurrentItem(2));
 
         // Set initial style
         updateTabStyles(0);
     }
 
     private void updateTabStyles(int selectedPosition) {
-        TextView[] tabs = {tabLive, tabNotifications, tabAppliances};
+        TextView[] tabs = {tabLive, tabNotifications};
 
         for (int i = 0; i < tabs.length; i++) {
             if (i == selectedPosition) {

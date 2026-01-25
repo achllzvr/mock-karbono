@@ -31,7 +31,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.achllzvr.mockkarbono.R;
 import com.achllzvr.mockkarbono.db.AppDatabase;
 import com.achllzvr.mockkarbono.db.entities.AppUsage;
-import com.achllzvr.mockkarbono.db.entities.ApplianceLog;
 import com.achllzvr.mockkarbono.db.entities.NotificationEvent;
 import com.achllzvr.mockkarbono.utils.PrefsManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -262,19 +261,6 @@ public class DashboardFragmentNew extends Fragment {
             }
         }
 
-        // Expand Appliances card
-        if (cardAppliances != null) {
-            View child = cardAppliances.getChildAt(cardAppliances.getChildCount() - 1);
-            if (child instanceof TextView) {
-                child.setOnClickListener(v -> {
-                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragmentContainer, new AppliancesFragment());
-                    transaction.addToBackStack(null);
-                    transaction.commit();
-                });
-            }
-        }
-
         // Show references bottom sheet
         if (btnReferences != null) {
             btnReferences.setOnClickListener(v -> showReferencesBottomSheet());
@@ -326,30 +312,19 @@ public class DashboardFragmentNew extends Fragment {
             }
             phoneCO2 += notifCO2;
 
-            // Fetch Appliances
-            List<ApplianceLog> appliances = db.applianceDao().getAll();
-            double applianceCO2 = 0.0;
-            for (ApplianceLog app : appliances) {
-                applianceCO2 += app.estimatedKgCO2PerDay;
-            }
-
-            double totalCO2 = phoneCO2 + applianceCO2;
+            double totalCO2 = phoneCO2;
 
             // Sort Top Apps & Appliances
             List<AppUsage> topApps = new ArrayList<>(aggregatedUsage.values());
             Collections.sort(topApps, (a, b) -> Double.compare(b.durationMs, a.durationMs));
 
-            Collections.sort(appliances, (a, b) -> Double.compare(b.estimatedKgCO2PerDay, a.estimatedKgCO2PerDay));
-            List<ApplianceLog> topAppliances = appliances.size() > 3 ? appliances.subList(0, 3) : appliances;
-
             // Final Values for UI
             double finalPhoneCO2 = phoneCO2;
-            double finalApplianceCO2 = applianceCO2;
             double finalTotalCO2 = totalCO2;
 
             if (getActivity() != null) {
                 getActivity().runOnUiThread(() -> {
-                    updateDashboardUI(finalTotalCO2, finalPhoneCO2, finalApplianceCO2, topApps, topAppliances);
+                    updateDashboardUI(finalTotalCO2, finalPhoneCO2, topApps);
                 });
             }
 
@@ -375,13 +350,6 @@ public class DashboardFragmentNew extends Fragment {
         // Retrieve broad datasets once to avoid 7 separate DB queries per table
         List<AppUsage> allUsage = db.appUsageDao().getLatest(5000); // Grab enough history
         List<NotificationEvent> allNotifs = db.notificationEventDao().getAll();
-        List<ApplianceLog> allAppliances = db.applianceDao().getAll();
-
-        // Calculate appliances daily cost (constant per day)
-        double dailyApplianceCost = 0;
-        for (ApplianceLog app : allAppliances) {
-            dailyApplianceCost += app.estimatedKgCO2PerDay;
-        }
 
         // Loop through 7 days
         for (int i = 0; i < 7; i++) {
@@ -407,7 +375,7 @@ public class DashboardFragmentNew extends Fragment {
             // Total for Day i
             // Only add appliance cost if there was ANY activity that day or if it's today/past
             if (dayEnd <= System.currentTimeMillis() || dayUsageCO2 > 0) {
-                dailyTotals[i] = dayUsageCO2 + dayNotifCO2 + dailyApplianceCost;
+                dailyTotals[i] = dayUsageCO2 + dayNotifCO2;
             } else {
                 dailyTotals[i] = 0; // Future day or no data
             }
@@ -463,16 +431,13 @@ public class DashboardFragmentNew extends Fragment {
         }
     }
 
-    private void updateDashboardUI(double totalCO2, double phoneCO2, double applianceCO2,
-                                   List<AppUsage> topApps, List<ApplianceLog> topAppliances) {
+    private void updateDashboardUI(double totalCO2, double phoneCO2,
+                                   List<AppUsage> topApps) {
 
         // Update carbon values
         tvTodayCarbon.setText(String.format(Locale.US, "%.3f", totalCO2));
         if (tvPhoneCarbonValue != null) {
             tvPhoneCarbonValue.setText(String.format(Locale.US, "%.1f %%", (totalCO2 > 0 ? (phoneCO2 / totalCO2) * 100 : 0)));
-        }
-        if (tvApplianceCarbonValue != null) {
-            tvApplianceCarbonValue.setText(String.format(Locale.US, "%.1f %%", (totalCO2 > 0 ? (applianceCO2 / totalCO2) * 100 : 0)));
         }
 
         // Update status text
@@ -514,30 +479,6 @@ public class DashboardFragmentNew extends Fragment {
             if (rowApp3 != null) rowApp3.setVisibility(View.VISIBLE);
         } else {
             if (rowApp3 != null) rowApp3.setVisibility(View.GONE);
-        }
-
-
-        // --- Logic for Appliance Rows ---
-        if (topAppliances.size() > 0) {
-            if (tvTopAppliance1 != null) tvTopAppliance1.setText(topAppliances.get(0).name);
-            if (rowAppliance1 != null) rowAppliance1.setVisibility(View.VISIBLE);
-        } else {
-            if (tvTopAppliance1 != null) tvTopAppliance1.setText("Tap to add appliances");
-            if (rowAppliance1 != null) rowAppliance1.setVisibility(View.VISIBLE);
-        }
-
-        if (topAppliances.size() > 1) {
-            if (tvTopAppliance2 != null) tvTopAppliance2.setText(topAppliances.get(1).name);
-            if (rowAppliance2 != null) rowAppliance2.setVisibility(View.VISIBLE);
-        } else {
-            if (rowAppliance2 != null) rowAppliance2.setVisibility(View.GONE);
-        }
-
-        if (topAppliances.size() > 2) {
-            if (tvTopAppliance3 != null) tvTopAppliance3.setText(topAppliances.get(2).name);
-            if (rowAppliance3 != null) rowAppliance3.setVisibility(View.VISIBLE);
-        } else {
-            if (rowAppliance3 != null) rowAppliance3.setVisibility(View.GONE);
         }
 
         // Update mascot state

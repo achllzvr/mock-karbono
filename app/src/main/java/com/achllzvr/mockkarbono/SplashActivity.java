@@ -7,7 +7,6 @@ import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import com.achllzvr.mockkarbono.utils.PrefsManager;
-import com.google.firebase.auth.FirebaseAuth;
 
 public class SplashActivity extends AppCompatActivity {
     @Override
@@ -23,7 +22,6 @@ public class SplashActivity extends AppCompatActivity {
     private void routeUser() {
 
         PrefsManager prefs = new PrefsManager(this);
-        FirebaseAuth auth = FirebaseAuth.getInstance();
 
         Intent intent;
 
@@ -36,10 +34,6 @@ public class SplashActivity extends AppCompatActivity {
         if (prefs.isFirstRun()) {
             // Case 1: Brand new install
             intent = new Intent(this, OnboardingActivity.class);
-        } else if (auth.getCurrentUser() != null && !prefs.isOnboardingCompleted()) {
-            // Case 2: Reinstaller (Has Auth, but cleared data/reinstalled)
-            intent = new Intent(this, OnboardingActivity.class);
-            intent.putExtra("IS_REINSTALLER", true);
         } else {
             // Case 3: Regular User
             intent = new Intent(this, MainActivity.class);

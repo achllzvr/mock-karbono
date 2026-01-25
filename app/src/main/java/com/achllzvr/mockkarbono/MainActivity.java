@@ -2,46 +2,24 @@ package com.achllzvr.mockkarbono;
 
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-
-import com.achllzvr.mockkarbono.db.entities.AppUsage;
-import com.achllzvr.mockkarbono.db.entities.NotificationEvent;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.auth.FirebaseAuth;
 import com.achllzvr.mockkarbono.ui.appusage.AppUsageAdapter;
 import com.achllzvr.mockkarbono.ui.appusage.AppUsageViewModel;
-import com.achllzvr.mockkarbono.ui.fragments.DashboardFragment;
 import com.achllzvr.mockkarbono.ui.fragments.DashboardFragmentNew;
-import com.achllzvr.mockkarbono.ui.fragments.TrackFragment;
-import com.achllzvr.mockkarbono.ui.fragments.AppliancesFragment;
-import com.achllzvr.mockkarbono.ui.fragments.SyncSettingsFragment;
 import com.achllzvr.mockkarbono.ui.fragments.MarketplaceFragment;
 import com.achllzvr.mockkarbono.ui.fragments.CommunityFragment;
 import com.achllzvr.mockkarbono.ui.fragments.ProfileFragment;
-import com.achllzvr.mockkarbono.tracking.SyncWorker;
 import com.achllzvr.mockkarbono.tracking.ScreenReceiver;
-import com.achllzvr.mockkarbono.db.AppDatabase;
 import com.achllzvr.mockkarbono.utils.PermissionHelper;
-
-import java.util.UUID;
-import java.util.concurrent.Executors;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "KarbonoDebug";
@@ -58,17 +36,6 @@ public class MainActivity extends AppCompatActivity {
         Log.d("(DEBUG) " +TAG, "MainActivity.onCreate");
 
         topBarAvatar = findViewById(R.id.imgAvatar);
-
-        // Firebase anonymous sign-in
-        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
-            FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    Log.d("(DEBUG) " +TAG, "Firebase anonymous sign-in successful, uid=" + FirebaseAuth.getInstance().getUid());
-                } else {
-                    Log.e("(DEBUG) " +TAG, "Firebase sign-in failed", task.getException());
-                }
-            });
-        }
 
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigation);
         bottomNav.setOnItemSelectedListener(item -> {

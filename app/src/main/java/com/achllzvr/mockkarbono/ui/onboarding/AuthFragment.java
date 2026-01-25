@@ -1,6 +1,7 @@
 package com.achllzvr.mockkarbono.ui.onboarding;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,20 +15,31 @@ import androidx.fragment.app.Fragment;
 
 import com.achllzvr.mockkarbono.OnboardingActivity;
 import com.achllzvr.mockkarbono.R;
-import com.google.firebase.auth.FirebaseAuth;
+import com.achllzvr.mockkarbono.api.ApiClient;
+import com.achllzvr.mockkarbono.api.KarbonoApiService;
+import com.achllzvr.mockkarbono.utils.PrefsManager;
+import com.google.gson.JsonObject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AuthFragment extends Fragment {
 
     private EditText etEmail, etPassword;
     private Button btnLogin, btnAnon;
-    private FirebaseAuth auth;
+    private KarbonoApiService apiService;
+    private PrefsManager prefsManager;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_auth, container, false);
 
-        auth = FirebaseAuth.getInstance();
+        // Initialize API and Prefs
+        apiService = ApiClient.getService();
+        prefsManager = new PrefsManager(requireContext());
+
         etEmail = view.findViewById(R.id.etEmail);
         etPassword = view.findViewById(R.id.etPassword);
         btnLogin = view.findViewById(R.id.btnLogin);
@@ -48,24 +60,56 @@ public class AuthFragment extends Fragment {
             return;
         }
 
-        // Mock Login for now (or real Firebase if configured)
-        auth.signInWithEmailAndPassword(email, pass).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                proceedToNext();
-            } else {
-                Toast.makeText(getContext(), "Auth Failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+        // 1. Create JSON Body
+        JsonObject credentials = new JsonObject();
+        credentials.addProperty("email", email);
+        credentials.addProperty("password", pass);
+
+        // 2. Call PHP API
+        btnLogin.setEnabled(false); // Prevent double clicks
+        btnLogin.setText("Logging in...");
+
+        apiService.loginUser(credentials).enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                btnLogin.setEnabled(true);
+                btnLogin.setText("Log In");
+
+                if (response.isSuccessful() && response.body() != null) {
+                    JsonObject body = response.body();
+
+                    // 3. Save Token & User ID
+                    if (body.has("token")) {
+                        String token = body.get("token").getAsString();
+                        prefsManager.saveToken(token); // Needed for SyncWorker
+
+                        Toast.makeText(getContext(), "Welcome back!", Toast.LENGTH_SHORT).show();
+                        proceedToNext();
+                    } else {
+                        Toast.makeText(getContext(), "Login failed: Invalid response", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Login Failed: Check credentials", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                btnLogin.setEnabled(true);
+                btnLogin.setText("Log In");
+                Log.e("AuthFragment", "Network Error", t);
+                Toast.makeText(getContext(), "Network Error. Working offline.", Toast.LENGTH_LONG).show();
             }
         });
     }
 
     private void handleGuestLogin() {
-        auth.signInAnonymously().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                proceedToNext();
-            } else {
-                Toast.makeText(getContext(), "Guest Auth Failed", Toast.LENGTH_SHORT).show();
-            }
-        });
+        // Guest Mode = Offline Mode (No Token)
+        // You might want to clear any existing token just in case
+        // prefsManager.clearToken();
+
+        Toast.makeText(getContext(), "Continuing as Guest (Offline Mode)", Toast.LENGTH_SHORT).show();
+        proceedToNext();
     }
 
     private void proceedToNext() {

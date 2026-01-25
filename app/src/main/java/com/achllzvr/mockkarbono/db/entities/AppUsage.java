@@ -15,6 +15,9 @@ public class AppUsage {
     public long durationMs;
     public double estimatedWh;
     public double estimatedKgCO2;
-    public long clientCreatedAtMs; // when the event was created on device
+    public long clientCreatedAtMs;
     public boolean synced;
+    public long timestamp;
+    public long durationSeconds;
+    public double estimatedCo2;
 }

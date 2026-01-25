@@ -11,6 +11,7 @@ public class PrefsManager {
     // New keys for tutorials
     private static final String KEY_TUTORIAL_DASHBOARD_SEEN = "tutorial_dashboard_seen";
     private static final String KEY_TUTORIAL_TRACK_SEEN = "tutorial_track_seen";
+    private static final String KEY_AUTH_TOKEN = "auth_token";
 
     private SharedPreferences prefs;
 
@@ -49,5 +50,13 @@ public class PrefsManager {
 
     public void setTrackTutorialSeen(boolean seen) {
         prefs.edit().putBoolean(KEY_TUTORIAL_TRACK_SEEN, seen).apply();
+    }
+
+    public void saveToken(String token) {
+        prefs.edit().putString(KEY_AUTH_TOKEN, token).apply();
+    }
+
+    public String getToken() {
+        return prefs.getString(KEY_AUTH_TOKEN, null);
     }
 }

@@ -35,4 +35,8 @@ public interface AppUsageDao {
 
     @Query("SELECT * FROM app_usage WHERE packageName = :packageName AND clientCreatedAtMs > :afterTimestamp ORDER BY clientCreatedAtMs DESC LIMIT 1")
     AppUsage getRecentByPackage(String packageName, long afterTimestamp);
+
+    // FIXED: Changed 'app_usage_logs' to 'app_usage'
+    @Query("SELECT DISTINCT packageName FROM app_usage")
+    List<String> getDistinctPackageNames();
 }

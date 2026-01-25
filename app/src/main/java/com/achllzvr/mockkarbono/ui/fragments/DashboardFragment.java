@@ -15,7 +15,6 @@ import com.achllzvr.mockkarbono.R;
 import com.achllzvr.mockkarbono.db.AppDatabase;
 import com.achllzvr.mockkarbono.db.entities.AppUsage;
 import com.achllzvr.mockkarbono.db.entities.NotificationEvent;
-import com.achllzvr.mockkarbono.db.entities.ApplianceLog;
 import com.achllzvr.mockkarbono.tracking.SyncWorker;
 import com.achllzvr.mockkarbono.ui.views.CircularProgressView;
 import com.achllzvr.mockkarbono.ui.views.DayProgressCircle;
@@ -124,20 +123,12 @@ public class DashboardFragment extends Fragment {
                 }
             }
 
-            // Get appliances
-            List<ApplianceLog> appliances = db.applianceDao().getAll();
-            double applianceCO2 = 0.0;
-            for (ApplianceLog app : appliances) {
-                applianceCO2 += app.estimatedKgCO2PerDay;
-            }
-
             // Total CO2
-            double totalCO2 = phoneCO2 + notifCO2 + applianceCO2;
+            double totalCO2 = phoneCO2 + notifCO2;
 
             // Unsynced count
             int unsyncedCount = db.appUsageDao().countUnsynced() +
-                               db.notificationEventDao().countUnsynced() +
-                               db.applianceDao().countUnsynced();
+                               db.notificationEventDao().countUnsynced();
 
             // Calculate streak
             int streak = calculateStreak();
@@ -150,7 +141,6 @@ public class DashboardFragment extends Fragment {
             // Make final for lambda
             double finalPhoneCO2 = phoneCO2;
             double finalNotifCO2 = notifCO2;
-            double finalApplianceCO2 = applianceCO2;
             double finalTotalCO2 = totalCO2;
             int finalUnsyncedCount = unsyncedCount;
             int finalStreak = streak;
@@ -160,7 +150,6 @@ public class DashboardFragment extends Fragment {
                 getActivity().runOnUiThread(() -> {
                     tvTodayTotal.setText(String.format(Locale.US, "%.2f", finalTotalCO2));
                     tvPhoneCarbon.setText(String.format(Locale.US, "%.2f", finalPhoneCO2));
-                    tvAppliancesCarbon.setText(String.format(Locale.US, "%.2f", finalApplianceCO2));
                     tvNotificationsCarbon.setText(String.format(Locale.US, "%.2f", finalNotifCO2));
 
                     if (withinSafeRange) {
@@ -257,12 +246,6 @@ public class DashboardFragment extends Fragment {
                     if (notif.clientCreatedAtMs >= dateStartMs && notif.clientCreatedAtMs < dateEndMs) {
                         dayCO2 += notif.estimatedKgCO2;
                     }
-                }
-
-                // Get appliances for all days (they contribute to each day)
-                List<ApplianceLog> appliances = db.applianceDao().getAll();
-                for (ApplianceLog app : appliances) {
-                    dayCO2 += app.estimatedKgCO2PerDay;
                 }
 
                 // Calculate progress (0.0 to 1.0+)
@@ -376,11 +359,6 @@ public class DashboardFragment extends Fragment {
                 }
             }
 
-            // Get appliances (they contribute to every day)
-            List<ApplianceLog> appliances = db.applianceDao().getAll();
-            for (ApplianceLog app : appliances) {
-                dayCO2 += app.estimatedKgCO2PerDay;
-            }
         } catch (Exception e) {
             // If database error, return 0
             e.printStackTrace();

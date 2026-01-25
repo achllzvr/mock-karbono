@@ -3,9 +3,6 @@ package com.achllzvr.mockkarbono.tracking;
 import android.app.usage.UsageStats;
 import android.app.usage.UsageStatsManager;
 import android.content.Context;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -14,95 +11,77 @@ import androidx.work.WorkerParameters;
 
 import com.achllzvr.mockkarbono.db.AppDatabase;
 import com.achllzvr.mockkarbono.db.entities.AppUsage;
+import com.achllzvr.mockkarbono.db.entities.CarbonReference;
 import com.achllzvr.mockkarbono.utils.CarbonUtils;
 
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class UsageQueryWorker extends Worker {
 
-    public UsageQueryWorker(@NonNull Context context, @NonNull WorkerParameters params) {
-        super(context, params);
+    private static final String TAG = "UsageQueryWorker";
+    private final AppDatabase db;
+
+    public UsageQueryWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
+        db = AppDatabase.getInstance(context);
     }
 
     @NonNull
     @Override
     public Result doWork() {
-        Log.d("(DEBUG) UsageQueryWorker", "UsageQueryWorker.doWork start");
-        Context ctx = getApplicationContext();
-        UsageStatsManager usm = (UsageStatsManager) ctx.getSystemService(Context.USAGE_STATS_SERVICE);
-        PackageManager pm = ctx.getPackageManager(); // Needed for detailed category detection
+        Context context = getApplicationContext();
+        Log.d(TAG, "Starting Usage Query...");
 
-        long now = System.currentTimeMillis();
-        long lastWindow = now - 15 * 60 * 1000; // last 15 minutes
+        try {
+            UsageStatsManager usageStatsManager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
+            if (usageStatsManager == null) return Result.failure();
 
-        List<UsageStats> stats = usm.queryUsageStats(UsageStatsManager.INTERVAL_DAILY, lastWindow, now);
-        if (stats == null) return Result.success();
+            Calendar calendar = Calendar.getInstance();
+            long endTime = calendar.getTimeInMillis();
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
+            long startTime = calendar.getTimeInMillis();
 
-        AppDatabase db = AppDatabase.getInstance(ctx);
+            Map<String, UsageStats> statsMap = usageStatsManager.queryAndAggregateUsageStats(startTime, endTime);
 
-        for (UsageStats st : stats) {
-            long durationMs = st.getTotalTimeInForeground();
-            if (durationMs <= 0) continue;
-
-            // Duplicate Check (Last 20 mins)
-            long twentyMinutesAgo = now - 20 * 60 * 1000;
-            AppUsage recentUsage = db.appUsageDao().getRecentByPackage(st.getPackageName(), twentyMinutesAgo);
-
-            if (recentUsage != null) {
-                continue; // Skip duplicate
+            if (statsMap == null || statsMap.isEmpty()) {
+                return Result.failure();
             }
 
-            String pkgName = st.getPackageName();
-            String category = determineCategory(pm, pkgName);
+            List<CarbonReference> references = db.carbonReferenceDao().getAll();
 
-            AppUsage usage = new AppUsage();
-            usage.uuid = UUID.randomUUID().toString();
-            usage.packageName = pkgName;
-            usage.category = category;
-            usage.startTimeMs = lastWindow;
-            usage.endTimeMs = now;
-            usage.durationMs = durationMs;
+            for (UsageStats stats : statsMap.values()) {
+                long durationMs = stats.getTotalTimeInForeground();
 
-            // 1. Calculate TRUE Carbon Cost (Cloud + Device)
-            usage.estimatedKgCO2 = CarbonUtils.calculateAppEmissions(category, durationMs);
+                if (durationMs > 1000) {
+                    double durationSeconds = durationMs / 1000.0;
 
-            // 2. Store Device Energy (Wh) for reference/database consistency
-            // We use standard 5W here to represent the battery drain portion, distinct from the total CO2 footprint
-            usage.estimatedWh = CarbonUtils.wattsAndDurationToWh(CarbonUtils.AVG_DEVICE_WATTS, durationMs);
+                    // NEW LOGIC: Use calculateCO2
+                    double co2 = CarbonUtils.calculateCO2(stats.getPackageName(), (long) durationSeconds, references);
 
-            usage.clientCreatedAtMs = System.currentTimeMillis();
-            usage.synced = false;
+                    AppUsage entry = new AppUsage();
+                    entry.uuid = UUID.randomUUID().toString();
+                    entry.packageName = stats.getPackageName();
+                    entry.clientCreatedAtMs = System.currentTimeMillis();
+                    entry.startTimeMs = startTime;
+                    entry.endTimeMs = endTime;
+                    entry.durationMs = durationMs;
 
-            db.appUsageDao().insert(usage);
-            Log.d("(DEBUG) UsageQueryWorker", "Inserted: " + pkgName + " [" + category + "] CO2: " + usage.estimatedKgCO2);
-        }
-        return Result.success();
-    }
+                    // Matches the fixed Entity
+                    entry.estimatedKgCO2 = co2;
 
-    private String determineCategory(PackageManager pm, String pkg) {
-        String p = pkg.toLowerCase();
+                    entry.synced = false;
 
-        // 1. Explicit Overrides (High Priority)
-        if (p.contains("youtube") || p.contains("netflix") || p.contains("twitch") || p.contains("disney")) return "video";
-        if (p.contains("facebook") || p.contains("tiktok") || p.contains("instagram") || p.contains("twitter") || p.contains("discord") || p.contains("telegram") || p.contains("messenger")) return "social";
-        if (p.contains("gmail") || p.contains("mail") || p.contains("outlook")) return "email";
-
-        // 2. Android System Categories (Android 8.0+)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            try {
-                ApplicationInfo info = pm.getApplicationInfo(pkg, 0);
-                if (info.category == ApplicationInfo.CATEGORY_GAME) return "game";
-                if (info.category == ApplicationInfo.CATEGORY_SOCIAL) return "social";
-                if (info.category == ApplicationInfo.CATEGORY_VIDEO) return "video";
-            } catch (PackageManager.NameNotFoundException e) {
-                // Package not found locally
+                    db.appUsageDao().insert(entry);
+                }
             }
+            return Result.success();
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error in UsageQueryWorker", e);
+            return Result.retry();
         }
-
-        // 3. Fallback Keyword Detection for Games
-        if (p.contains("game") || p.contains("clash") || p.contains("roblox") || p.contains("genshin") || p.contains("legends") || p.contains("minecraft")) return "game";
-
-        return "other";
     }
 }

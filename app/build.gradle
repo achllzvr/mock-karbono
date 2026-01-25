@@ -68,7 +68,6 @@ dependencies {
     implementation libs.androidx.compose.ui.graphics
     implementation libs.androidx.compose.ui.tooling.preview
     implementation libs.androidx.compose.material3
-    implementation libs.firebase.auth
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core
@@ -90,15 +89,6 @@ dependencies {
     // WorkManager
     implementation libs.androidx.work.runtime
 
-    // Firebase (BOM)
-    implementation platform(libs.firebase.bom)
-
-    // Firebase (Analytics)
-    implementation libs.firebase.analytics
-
-    // irebase (Firestore)
-    implementation libs.firebase.firestore
-
     // Networking (Retrofit & OkHttp)
     implementation libs.retrofit
     implementation libs.converter.gson
@@ -117,4 +107,12 @@ dependencies {
     implementation libs.androidx.viewpager2
     implementation libs.androidx.fragment
 
+    // Removed (01/24/26)
+    // implementation libs.firebase.auth
+    // Firebase (BOM)
+    // implementation platform(libs.firebase.bom)
+    // Firebase (Analytics)
+    //implementation libs.firebase.analytics
+    // Firebase (Firestore)
+    // implementation libs.firebase.firestore
 }
