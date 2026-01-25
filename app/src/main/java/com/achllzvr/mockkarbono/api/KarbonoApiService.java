@@ -38,13 +38,13 @@ public interface KarbonoApiService {
     @POST("marketplace/contribute.php")
     Call<JsonObject> contributeToGoal(@Header("Authorization") String token, @Body JsonObject contributionData);
 
-    // --- SOCIAL ---
-    @GET("community/streaks.php")
-    Call<JsonObject> getFriendStreaks(@Header("Authorization") String token);
-
     // --- CONTENT ---
     @GET("content/news.php")
     Call<JsonObject> getBlogPosts();
+
+    // --- COMMUNITY & SOCIAL ---
+    @GET("community/leaderboard.php")
+    Call<JsonObject> getLeaderboard();
 
     // Legacy support
     @GET("tree-models")
