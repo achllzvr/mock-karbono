@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- drawable/circular_progress_profile.xml -->
+<!-- Circular progress ring for profile completion -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Background Ring -->
+    <item>
+        <shape
+            android:shape="ring"
+            android:innerRadiusRatio="3"
+            android:thickness="4dp"
+            android:useLevel="false">
+            <solid android:color="@color/divider" />
+        </shape>
+    </item>
+
+    <!-- Progress Ring -->
+    <item>
+        <rotate
+            android:fromDegrees="0"
+            android:toDegrees="360">
+            <shape
+                android:shape="ring"
+                android:innerRadiusRatio="3"
+                android:thickness="4dp"
+                android:useLevel="true">
+                <gradient
+                    android:angle="0"
+                    android:endColor="@color/matcha_green"
+                    android:startColor="@color/matcha_green_light"
+                    android:type="sweep" />
+            </shape>
+        </rotate>
+    </item>
+
+</layer-list>

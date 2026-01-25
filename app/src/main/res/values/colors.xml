@@ -2,6 +2,7 @@
 <resources>
     <!-- ===================== -->
     <!-- SOFT POP DESIGN SYSTEM -->
+    <!-- Enhanced Duolingo-inspired palette -->
     <!-- ===================== -->
 
     <!-- Core Palette -->
@@ -9,21 +10,34 @@
     <color name="matcha_green">#88C057</color>
     <color name="matcha_green_dark">#6FA043</color>
     <color name="matcha_green_light">#A8D47A</color>
+    <color name="matcha_green_ultra_light">#E8F5E0</color>
+
     <color name="marigold">#F7B538</color>
     <color name="marigold_dark">#E5A020</color>
+    <color name="marigold_light">#FFF4D6</color>
+
     <color name="coral">#E07A5F</color>
     <color name="coral_dark">#C9604A</color>
+    <color name="coral_light">#FCE8E4</color>
+
+    <!-- Text Colors -->
     <color name="text_dark">#2D3436</color>
     <color name="text_secondary">#636E72</color>
     <color name="text_tertiary">#B2BEC3</color>
+    <color name="text_hint">#DFE6E9</color>
 
     <!-- Card & Surface Colors -->
     <color name="card_white">#FFFFFF</color>
     <color name="shadow_gray">#D3D3D3</color>
     <color name="shadow_dark">#B0B0B0</color>
     <color name="divider">#E8E8E8</color>
+    <color name="overlay">#33000000</color>
 
-    <!-- Progress Bar Colors -->
+    <!-- Interactive States -->
+    <color name="ripple_light">#1A000000</color>
+    <color name="ripple_green">#1A88C057</color>
+
+    <!-- Progress & Status -->
     <color name="progress_green">#88C057</color>
     <color name="progress_yellow">#F7B538</color>
     <color name="progress_red">#E07A5F</color>
@@ -34,7 +48,16 @@
     <color name="pill_yellow_bg">#FFF4D6</color>
     <color name="pill_coral_bg">#FCE8E4</color>
 
-    <!-- Legacy mapping for backwards compatibility -->
+    <!-- Podium Colors -->
+    <color name="podium_gold">#F7B538</color>
+    <color name="podium_silver">#B2BEC3</color>
+    <color name="podium_bronze">#CD9A68</color>
+
+    <!-- Badge backgrounds -->
+    <color name="badge_unlocked_bg">#FFF4D6</color>
+    <color name="badge_locked_bg">#F0F0F0</color>
+
+    <!-- Legacy Compatibility -->
     <color name="colorBackground">#FDFBF7</color>
     <color name="colorOnBackground">#2D3436</color>
     <color name="colorAccent">#88C057</color>
@@ -58,15 +81,6 @@
     <color name="colorSyncing">#F7B538</color>
     <color name="colorScrim">#99000000</color>
     <color name="colorOverlay">#33FFFFFF</color>
-
-    <!-- Podium Colors -->
-    <color name="podium_gold">#F7B538</color>
-    <color name="podium_silver">#B2BEC3</color>
-    <color name="podium_bronze">#CD9A68</color>
-
-    <!-- Badge backgrounds -->
-    <color name="badge_unlocked_bg">#FFF4D6</color>
-    <color name="badge_locked_bg">#F0F0F0</color>
     <color name="black">#000000</color>
-    <color name="white">#EEEEEE</color>
+    <color name="white">#FFFFFF</color>
 </resources>

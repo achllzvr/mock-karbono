@@ -6,20 +6,23 @@
     android:background="@drawable/bg_card_hard_shadow"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:padding="16dp"
-    android:layout_marginBottom="12dp">
+    android:padding="@dimen/card_padding_compact"
+    android:layout_marginBottom="@dimen/spacing_medium"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="@drawable/ripple_card">
 
     <androidx.cardview.widget.CardView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        app:cardBackgroundColor="#E3F2FD"
-        app:cardCornerRadius="20dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        app:cardBackgroundColor="@color/pill_green_bg"
+        app:cardCornerRadius="24dp"
         app:cardElevation="0dp">
 
         <ImageView
             android:id="@+id/ivAppIcon"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
             android:layout_gravity="center"
             android:src="@drawable/ic_app_placeholder" />
     </androidx.cardview.widget.CardView>
@@ -28,7 +31,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="@dimen/spacing_base"
         android:orientation="vertical">
 
         <TextView
@@ -37,8 +40,9 @@
             android:layout_height="wrap_content"
             android:text="App Name"
             android:textColor="@color/text_dark"
-            android:textSize="16sp"
-            android:textStyle="bold" />
+            android:textSize="@dimen/text_size_body_large"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium" />
 
         <TextView
             android:id="@+id/tvTimestamp"
@@ -46,7 +50,8 @@
             android:layout_height="wrap_content"
             android:text="10:39 AM"
             android:textColor="@color/text_secondary"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_size_small"
+            android:layout_marginTop="@dimen/spacing_tiny" />
     </LinearLayout>
 
     <TextView
@@ -55,7 +60,8 @@
         android:layout_height="wrap_content"
         android:text="0.0005 kg"
         android:textColor="@color/matcha_green"
-        android:textSize="14sp"
-        android:textStyle="bold" />
+        android:textSize="@dimen/text_size_body"
+        android:textStyle="bold"
+        android:fontFamily="sans-serif-medium" />
 
 </LinearLayout>

@@ -1,39 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/white"
-    android:padding="16dp">
+    android:background="@color/cream_background">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- Header Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Marketplace"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_marginBottom="4dp"/>
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/spacing_base"
+        android:paddingTop="@dimen/spacing_base"
+        android:paddingBottom="@dimen/spacing_small">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Support reforestation campaigns"
-        android:textSize="14sp"
-        android:textColor="#757575"
-        android:layout_marginBottom="16dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Marketplace"
+            android:textSize="@dimen/text_size_display"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-black"
+            android:textColor="@color/text_dark"
+            android:layout_marginBottom="@dimen/spacing_tiny"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Support reforestation campaigns"
+            android:textSize="@dimen/text_size_body"
+            android:textColor="@color/text_secondary"/>
+
+    </LinearLayout>
+
+    <!-- Swipe Refresh Container -->
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:swipeRefreshLayoutProgressSpinnerBackgroundColor="@color/card_white">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerMarketplace"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:clipToPadding="false"
-            android:paddingBottom="80dp"/>
+            android:paddingHorizontal="@dimen/spacing_small"
+            android:paddingBottom="88dp"
+            android:scrollbars="none"
+            android:overScrollMode="never"/>
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

@@ -1,26 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Speech bubble background for mascot message -->
+<!-- Enhanced bottom nav with proper shadow and Duolingo-style elevation -->
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Shadow -->
-    <item
-        android:top="3dp">
+    <!-- Subtle shadow (top only) -->
+    <item>
         <shape android:shape="rectangle">
             <solid android:color="@color/shadow_gray" />
-            <corners android:radius="20dp" />
+            <corners
+                android:topLeftRadius="24dp"
+                android:topRightRadius="24dp" />
         </shape>
     </item>
 
-    <!-- Main bubble -->
+    <!-- Main surface -->
     <item
-        android:bottom="3dp">
+        android:bottom="0dp"
+        android:top="2dp">
         <shape android:shape="rectangle">
             <solid android:color="@color/card_white" />
+            <corners
+                android:topLeftRadius="24dp"
+                android:topRightRadius="24dp" />
+        </shape>
+    </item>
+
+    <!-- Top border accent -->
+    <item
+        android:bottom="0dp"
+        android:top="2dp"
+        android:left="0dp"
+        android:right="0dp">
+        <shape android:shape="rectangle">
             <stroke
                 android:width="1dp"
                 android:color="@color/divider" />
+            <corners
+                android:topLeftRadius="24dp"
+                android:topRightRadius="24dp" />
         </shape>
     </item>
 
 </layer-list>
-

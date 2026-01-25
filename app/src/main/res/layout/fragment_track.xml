@@ -6,13 +6,43 @@
     android:orientation="vertical"
     android:background="@color/cream_background">
 
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/spacing_base"
+        android:paddingTop="@dimen/spacing_base"
+        android:paddingBottom="@dimen/spacing_small">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Track Usage"
+            android:textSize="@dimen/text_size_display"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-black"
+            android:textColor="@color/text_dark"
+            android:layout_marginBottom="@dimen/spacing_tiny"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Monitor your digital carbon footprint"
+            android:textSize="@dimen/text_size_body"
+            android:textColor="@color/text_secondary"/>
+
+    </LinearLayout>
+
+    <!-- Tab Container -->
     <LinearLayout
         android:id="@+id/tabContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_margin="16dp"
-        android:padding="8dp"
+        android:layout_marginHorizontal="@dimen/spacing_base"
+        android:layout_marginBottom="@dimen/spacing_base"
+        android:padding="@dimen/spacing_tiny"
         android:background="@drawable/bg_tab_container">
 
         <TextView
@@ -21,10 +51,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Live"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_size_body"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
             android:textColor="@color/text_secondary"
             android:gravity="center"
-            android:paddingVertical="10dp" />
+            android:paddingVertical="@dimen/spacing_medium"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_card"/>
 
         <TextView
             android:id="@+id/tabNotifications"
@@ -32,21 +67,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Notifications"
-            android:textSize="12sp"
+            android:textSize="@dimen/text_size_body"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-medium"
             android:textColor="@color/text_secondary"
             android:gravity="center"
-            android:paddingVertical="10dp"/>
-
-        <TextView
-            android:id="@+id/tabAppliances"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Appliances"
-            android:textSize="12sp"
-            android:textColor="@color/text_secondary"
-            android:gravity="center"
-            android:paddingVertical="10dp"/>
+            android:paddingVertical="@dimen/spacing_medium"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="@drawable/ripple_card"/>
 
     </LinearLayout>
 

@@ -1,41 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Spacing tokens -->
+    <!-- ===================== -->
+    <!-- SPACING SYSTEM -->
+    <!-- Duolingo-inspired 4px base grid -->
+    <!-- ===================== -->
+
     <dimen name="spacing_tiny">4dp</dimen>
     <dimen name="spacing_small">8dp</dimen>
     <dimen name="spacing_medium">12dp</dimen>
-    <dimen name="spacing_large">16dp</dimen>
-    <dimen name="spacing_extra_large">24dp</dimen>
-    <dimen name="spacing_huge">32dp</dimen>
+    <dimen name="spacing_base">16dp</dimen>
+    <dimen name="spacing_large">20dp</dimen>
+    <dimen name="spacing_xl">24dp</dimen>
+    <dimen name="spacing_xxl">32dp</dimen>
+    <dimen name="spacing_huge">40dp</dimen>
 
     <!-- Card dimensions -->
-    <dimen name="card_corner_radius">16dp</dimen>
-    <dimen name="card_corner_radius_small">12dp</dimen>
+    <dimen name="card_corner_radius">20dp</dimen>
+    <dimen name="card_corner_radius_small">16dp</dimen>
     <dimen name="card_elevation">4dp</dimen>
     <dimen name="card_elevation_small">2dp</dimen>
+    <dimen name="card_padding">20dp</dimen>
+    <dimen name="card_padding_compact">16dp</dimen>
 
     <!-- Button dimensions -->
-    <dimen name="button_corner_radius">12dp</dimen>
-    <dimen name="button_height">48dp</dimen>
+    <dimen name="button_corner_radius">16dp</dimen>
+    <dimen name="button_height">56dp</dimen>
+    <dimen name="button_height_compact">48dp</dimen>
+    <dimen name="button_padding_horizontal">24dp</dimen>
 
     <!-- Input dimensions -->
-    <dimen name="input_corner_radius">12dp</dimen>
-
-    <!-- Dialog dimensions -->
-    <dimen name="dialog_corner_radius">20dp</dimen>
+    <dimen name="input_corner_radius">16dp</dimen>
+    <dimen name="input_height">56dp</dimen>
 
     <!-- Icon sizes -->
-    <dimen name="icon_size_small">16dp</dimen>
+    <dimen name="icon_size_tiny">16dp</dimen>
+    <dimen name="icon_size_small">20dp</dimen>
     <dimen name="icon_size_medium">24dp</dimen>
     <dimen name="icon_size_large">32dp</dimen>
+    <dimen name="icon_size_xl">40dp</dimen>
+    <dimen name="icon_size_xxl">56dp</dimen>
 
-    <!-- Text sizes -->
+    <!-- Text sizes (using Duolingo-like scale) -->
     <dimen name="text_size_tiny">10sp</dimen>
     <dimen name="text_size_small">12sp</dimen>
     <dimen name="text_size_body">14sp</dimen>
-    <dimen name="text_size_subtitle">16sp</dimen>
-    <dimen name="text_size_title">18sp</dimen>
-    <dimen name="text_size_headline">20sp</dimen>
-    <dimen name="text_size_display">24sp</dimen>
-</resources>
+    <dimen name="text_size_body_large">16sp</dimen>
+    <dimen name="text_size_subtitle">18sp</dimen>
+    <dimen name="text_size_title">20sp</dimen>
+    <dimen name="text_size_headline">24sp</dimen>
+    <dimen name="text_size_display_small">28sp</dimen>
+    <dimen name="text_size_display">32sp</dimen>
+    <dimen name="text_size_display_large">40sp</dimen>
 
+    <!-- Component-specific -->
+    <dimen name="bottom_nav_height">72dp</dimen>
+    <dimen name="top_bar_height">80dp</dimen>
+    <dimen name="mascot_size">180dp</dimen>
+    <dimen name="mascot_size_small">120dp</dimen>
+
+    <!-- Elevation levels -->
+    <dimen name="elevation_none">0dp</dimen>
+    <dimen name="elevation_low">2dp</dimen>
+    <dimen name="elevation_medium">4dp</dimen>
+    <dimen name="elevation_high">8dp</dimen>
+
+    <!-- Border/Stroke -->
+    <dimen name="stroke_thin">1dp</dimen>
+    <dimen name="stroke_medium">2dp</dimen>
+    <dimen name="stroke_thick">3dp</dimen>
+</resources>

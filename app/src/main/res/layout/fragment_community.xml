@@ -1,40 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/cream_background"
-    android:padding="16dp">
+    android:background="@color/cream_background">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <!-- Header Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Leaderboard"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="@color/black"
-        android:layout_marginBottom="4dp"/>
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/spacing_base"
+        android:paddingTop="@dimen/spacing_base"
+        android:paddingBottom="@dimen/spacing_small">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Compete with eco-warriors worldwide"
-        android:textSize="14sp"
-        android:textColor="#757575"
-        android:layout_marginBottom="16dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Leaderboard"
+            android:textSize="@dimen/text_size_display"
+            android:textStyle="bold"
+            android:fontFamily="sans-serif-black"
+            android:textColor="@color/text_dark"
+            android:layout_marginBottom="@dimen/spacing_tiny"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Compete with eco-warriors worldwide"
+            android:textSize="@dimen/text_size_body"
+            android:textColor="@color/text_secondary"/>
+
+    </LinearLayout>
+
+    <!-- Progress Indicator -->
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:indeterminateTint="@color/matcha_green"
+        android:layout_marginVertical="@dimen/spacing_xl"
         android:visibility="gone"/>
 
+    <!-- Leaderboard List -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerLeaderboard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="80dp"/>
+        android:paddingHorizontal="@dimen/spacing_base"
+        android:paddingBottom="88dp"
+        android:scrollbars="none"
+        android:overScrollMode="never"/>
 
 </LinearLayout>
