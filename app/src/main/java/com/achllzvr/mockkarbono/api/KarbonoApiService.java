@@ -14,49 +14,39 @@ import retrofit2.http.POST;
 
 public interface KarbonoApiService {
 
-    // --- AUTHENTICATION ---
-
+    // --- AUTH ---
     @POST("auth/register.php")
     Call<JsonObject> registerUser(@Body JsonObject userData);
 
     @POST("auth/login.php")
     Call<JsonObject> loginUser(@Body JsonObject credentials);
 
-
-    // --- SYNC & LOGIC ---
-
-    // 1. Download the latest "Carbon Math" (The table you just made)
+    // --- SYNC ---
     @GET("sync/references.php")
     Call<JsonObject> getCarbonReferences();
 
-    // 2. Upload "Unknown Apps" found on the phone
     @POST("sync/report_packages.php")
     Call<Void> reportUnknownPackages(@Body List<String> packageNames);
 
-    // 3. Sync Daily Logs
     @POST("sync/upload_logs.php")
-    Call<JsonObject> uploadDailyLogs(
-            @Header("Authorization") String token,
-            @Body JsonObject dailyData
-    );
+    Call<JsonObject> uploadDailyLogs(@Header("Authorization") String token, @Body JsonObject dailyData);
 
-
-    // --- MARKETPLACE & SOCIAL ---
-
-    // This is the method causing your error!
+    // --- MARKETPLACE ---
     @GET("marketplace/goals.php")
-    Call<JsonObject> getMarketplaceGoals(); // Returns list of goals
+    Call<JsonObject> getMarketplaceGoals();
 
     @POST("marketplace/contribute.php")
-    Call<JsonObject> contributeToGoal(
-            @Header("Authorization") String token,
-            @Body JsonObject contributionData
-    );
+    Call<JsonObject> contributeToGoal(@Header("Authorization") String token, @Body JsonObject contributionData);
 
+    // --- SOCIAL ---
     @GET("community/streaks.php")
     Call<JsonObject> getFriendStreaks(@Header("Authorization") String token);
 
-    // Legacy support (optional, if you still reference it somewhere)
+    // --- CONTENT ---
+    @GET("content/news.php")
+    Call<JsonObject> getBlogPosts();
+
+    // Legacy support
     @GET("tree-models")
     Call<TreeResponse> getTrees(@Header("evertreen-user-apikey") String apiKey);
 }

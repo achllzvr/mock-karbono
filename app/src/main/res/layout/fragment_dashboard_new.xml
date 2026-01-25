@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Dashboard Fragment - Soft Pop / Duolingo Style with Mascot -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -11,14 +10,15 @@
         android:id="@+id/dashboardScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="80dp">
 
-            <!-- Vine Path / Weekly Progress Header -->
             <LinearLayout
                 android:id="@+id/vinePathContainer"
                 android:layout_width="match_parent"
@@ -54,217 +54,45 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <!-- Day 1 (Sun) -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <ImageButton
-                                android:id="@+id/seedDay1"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/bg_day_seed_inactive"
-                                android:src="@drawable/ic_leaf"
-                                android:scaleType="centerInside"
-                                android:padding="8dp"
-                                android:contentDescription="Sunday"
-                                app:tint="@color/text_tertiary" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="S"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="4dp" />
-
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                            <ImageButton android:id="@+id/seedDay1" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_day_seed_inactive" android:src="@drawable/ic_leaf" android:scaleType="centerInside" android:padding="8dp" android:contentDescription="Sunday" app:tint="@color/text_tertiary" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="S" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" />
                         </LinearLayout>
 
-                        <!-- Day 2 (Mon) -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <ImageButton
-                                android:id="@+id/seedDay2"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/bg_day_seed_inactive"
-                                android:src="@drawable/ic_leaf"
-                                android:scaleType="centerInside"
-                                android:padding="8dp"
-                                android:contentDescription="Monday"
-                                app:tint="@color/text_tertiary" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="M"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="4dp" />
-
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                            <ImageButton android:id="@+id/seedDay2" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_day_seed_inactive" android:src="@drawable/ic_leaf" android:scaleType="centerInside" android:padding="8dp" android:contentDescription="Monday" app:tint="@color/text_tertiary" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="M" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" />
                         </LinearLayout>
 
-                        <!-- Day 3 (Tue) -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <ImageButton
-                                android:id="@+id/seedDay3"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/bg_day_seed_inactive"
-                                android:src="@drawable/ic_leaf"
-                                android:scaleType="centerInside"
-                                android:padding="8dp"
-                                android:contentDescription="Tuesday"
-                                app:tint="@color/text_tertiary" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="T"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="4dp" />
-
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                            <ImageButton android:id="@+id/seedDay3" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_day_seed_inactive" android:src="@drawable/ic_leaf" android:scaleType="centerInside" android:padding="8dp" android:contentDescription="Tuesday" app:tint="@color/text_tertiary" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="T" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" />
                         </LinearLayout>
 
-                        <!-- Day 4 (Wed) -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <ImageButton
-                                android:id="@+id/seedDay4"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/bg_day_seed_inactive"
-                                android:src="@drawable/ic_leaf"
-                                android:scaleType="centerInside"
-                                android:padding="8dp"
-                                android:contentDescription="Wednesday"
-                                app:tint="@color/text_tertiary" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="W"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="4dp" />
-
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                            <ImageButton android:id="@+id/seedDay4" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_day_seed_inactive" android:src="@drawable/ic_leaf" android:scaleType="centerInside" android:padding="8dp" android:contentDescription="Wednesday" app:tint="@color/text_tertiary" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="W" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" />
                         </LinearLayout>
 
-                        <!-- Day 5 (Thu) -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <ImageButton
-                                android:id="@+id/seedDay5"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/bg_day_seed_inactive"
-                                android:src="@drawable/ic_leaf"
-                                android:scaleType="centerInside"
-                                android:padding="8dp"
-                                android:contentDescription="Thursday"
-                                app:tint="@color/text_tertiary" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="T"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="4dp" />
-
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                            <ImageButton android:id="@+id/seedDay5" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_day_seed_inactive" android:src="@drawable/ic_leaf" android:scaleType="centerInside" android:padding="8dp" android:contentDescription="Thursday" app:tint="@color/text_tertiary" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="T" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" />
                         </LinearLayout>
 
-                        <!-- Day 6 (Fri) -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <ImageButton
-                                android:id="@+id/seedDay6"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/bg_day_seed_inactive"
-                                android:src="@drawable/ic_leaf"
-                                android:scaleType="centerInside"
-                                android:padding="8dp"
-                                android:contentDescription="Friday"
-                                app:tint="@color/text_tertiary" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="F"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="4dp" />
-
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                            <ImageButton android:id="@+id/seedDay6" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_day_seed_inactive" android:src="@drawable/ic_leaf" android:scaleType="centerInside" android:padding="8dp" android:contentDescription="Friday" app:tint="@color/text_tertiary" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="F" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" />
                         </LinearLayout>
 
-                        <!-- Day 7 (Sat) -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:gravity="center">
-
-                            <ImageButton
-                                android:id="@+id/seedDay7"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/bg_day_seed_inactive"
-                                android:src="@drawable/ic_leaf"
-                                android:scaleType="centerInside"
-                                android:padding="8dp"
-                                android:contentDescription="Saturday"
-                                app:tint="@color/text_tertiary" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="S"
-                                android:textSize="11sp"
-                                android:textColor="@color/text_secondary"
-                                android:layout_marginTop="4dp" />
-
+                        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical" android:gravity="center">
+                            <ImageButton android:id="@+id/seedDay7" android:layout_width="40dp" android:layout_height="40dp" android:background="@drawable/bg_day_seed_inactive" android:src="@drawable/ic_leaf" android:scaleType="centerInside" android:padding="8dp" android:contentDescription="Saturday" app:tint="@color/text_tertiary" />
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="S" android:textSize="11sp" android:textColor="@color/text_secondary" android:layout_marginTop="4dp" />
                         </LinearLayout>
 
                     </LinearLayout>
-
                 </LinearLayout>
-
             </LinearLayout>
 
-            <!-- Mascot Section with Leaves Container -->
-            <!-- Changed from FrameLayout to RelativeLayout to position bubble relative to mascot -->
             <RelativeLayout
                 android:id="@+id/mascotContainer"
                 android:layout_width="match_parent"
@@ -272,14 +100,11 @@
                 android:layout_marginHorizontal="16dp"
                 android:clipChildren="false">
 
-                <!-- Falling Leaves Container (for particle effect) -->
                 <FrameLayout
                     android:id="@+id/leavesContainer"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
 
-                <!-- Speech Bubble -->
-                <!-- Moved above the mascot, positioned to the side -->
                 <LinearLayout
                     android:id="@+id/speechBubble"
                     android:layout_width="160dp"
@@ -301,10 +126,8 @@
                         android:textSize="13sp"
                         android:textColor="@color/text_dark"
                         android:textStyle="bold" />
-
                 </LinearLayout>
 
-                <!-- Mascot Image -->
                 <ImageView
                     android:id="@+id/imgMascot"
                     android:layout_width="180dp"
@@ -315,10 +138,8 @@
                     android:src="@drawable/mascot_happy"
                     android:scaleType="fitCenter"
                     android:contentDescription="Karbono Mascot" />
-
             </RelativeLayout>
 
-            <!-- Today's Carbon Display -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -356,7 +177,6 @@
                         android:textSize="24sp"
                         android:textColor="@color/text_secondary"
                         android:layout_marginStart="4dp" />
-
                 </LinearLayout>
 
                 <TextView
@@ -367,10 +187,8 @@
                     android:textSize="13sp"
                     android:textColor="@color/matcha_green"
                     android:layout_marginTop="4dp" />
-
             </LinearLayout>
 
-            <!-- Bento Box Cards Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -383,13 +201,11 @@
 
                 <LinearLayout
                     android:id="@+id/cardSmartphone"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bg_card_hard_shadow"
-                    android:padding="16dp"
-                    android:layout_marginEnd="8dp">
+                    android:padding="16dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -412,13 +228,30 @@
                                 android:contentDescription="Phone" />
                         </androidx.cardview.widget.CardView>
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
-                            android:text="Smartphone"
+                            android:text="Digital Footprint"
                             android:textSize="14sp"
                             android:textColor="@color/text_dark"
                             android:textStyle="bold"
                             android:layout_marginStart="12dp" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/btnReferences"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/bg_avatar_circle"
+                            app:cardCornerRadius="16dp"
+                            app:cardBackgroundColor="@color/card_white">
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_menu_book"
+                                app:tint="#88C057"
+                                android:contentDescription="References" />
+                        </androidx.cardview.widget.CardView>
                     </LinearLayout>
 
                     <RelativeLayout
@@ -536,193 +369,18 @@
                         android:progressBackgroundTint="#F5F5F5"
                         android:layout_marginBottom="16dp"/>
 
-                    <Space
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1" />
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="end"
                         android:text="Expand >"
                         android:textSize="12sp"
                         android:textColor="#88C057"
                         android:textStyle="bold"/>
                 </LinearLayout>
 
-                <FrameLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:clipChildren="false"
-                    android:clipToPadding="false">
-
-                    <LinearLayout
-                        android:id="@+id/cardAppliances"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:background="@drawable/bg_card_hard_shadow"
-                        android:padding="16dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginBottom="16dp">
-                            <androidx.cardview.widget.CardView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                app:cardCornerRadius="20dp"
-                                app:cardElevation="0dp"
-                                app:cardBackgroundColor="#FFF3E0">
-                                <ImageView
-                                    android:layout_width="20dp"
-                                    android:layout_height="20dp"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_appliance"
-                                    app:tint="#FFB74D"
-                                    android:contentDescription="Home" />
-                            </androidx.cardview.widget.CardView>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Home"
-                                android:textSize="14sp"
-                                android:textColor="@color/text_dark"
-                                android:textStyle="bold"
-                                android:layout_marginStart="12dp" />
-                        </LinearLayout>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Air Conditioner"
-                                android:textSize="12sp"
-                                android:textColor="@color/text_secondary"
-                                android:textStyle="bold"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:text="90%"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/text_dark"/>
-                        </RelativeLayout>
-                        <ProgressBar
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="8dp"
-                            android:progress="90"
-                            android:progressTint="#D86B58"
-                            android:progressBackgroundTint="#F5F5F5"
-                            android:layout_marginBottom="12dp"/>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Refrigerator"
-                                android:textSize="12sp"
-                                android:textColor="@color/text_secondary"
-                                android:textStyle="bold"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:text="70%"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/text_dark"/>
-                        </RelativeLayout>
-                        <ProgressBar
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="8dp"
-                            android:progress="70"
-                            android:progressTint="#FFB74D"
-                            android:progressBackgroundTint="#F5F5F5"
-                            android:layout_marginBottom="12dp"/>
-
-                        <RelativeLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp">
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Computer"
-                                android:textSize="12sp"
-                                android:textColor="@color/text_secondary"
-                                android:textStyle="bold"/>
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:text="50%"
-                                android:textSize="12sp"
-                                android:textStyle="bold"
-                                android:textColor="@color/text_dark"/>
-                        </RelativeLayout>
-                        <ProgressBar
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="match_parent"
-                            android:layout_height="8dp"
-                            android:progress="50"
-                            android:progressTint="#88C057"
-                            android:progressBackgroundTint="#F5F5F5"
-                            android:layout_marginBottom="16dp"/>
-
-                        <Space
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_weight="1" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Expand >"
-                            android:textSize="12sp"
-                            android:textColor="#FFB74D"
-                            android:textStyle="bold"/>
-                    </LinearLayout>
-
-                    <androidx.cardview.widget.CardView
-                        android:id="@+id/btnReferences"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="top|end"
-                        android:layout_marginTop="-8dp"
-                        android:layout_marginEnd="-2dp"
-                        android:translationZ="10dp"
-                        android:background="@drawable/bg_avatar_circle"
-                        app:cardCornerRadius="16dp"
-                        app:cardBackgroundColor="@color/card_white">
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_menu_book"
-                            app:tint="#88C057"
-                            android:contentDescription="References" />
-
-                    </androidx.cardview.widget.CardView>
-
-                </FrameLayout>
             </LinearLayout>
 
-            <!-- PH-Eco News -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -738,137 +396,14 @@
                     android:textColor="@color/text_dark"
                     android:textStyle="bold"
                     android:layout_marginBottom="12dp"/>
-                <HorizontalScrollView
-                    android:id="@+id/svEcoNews"
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerBlog"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:scrollbars="none"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="16dp"
-                    android:clipToPadding="false">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="300dp"
-                            android:layout_height="wrap_content"
-                            android:minHeight="150dp"
-                            android:orientation="horizontal"
-                            android:background="@drawable/bg_card_hard_shadow"
-                            android:padding="16dp"
-                            android:layout_marginEnd="16dp">
-
-                            <ImageView
-                                android:id="@+id/imgNews1"
-                                android:layout_width="80dp"
-                                android:layout_height="80dp"
-                                android:src="@drawable/img_mangrove"
-                                android:scaleType="centerCrop"
-                                android:contentDescription="Mangrove Thumbnail"
-                                android:background="@android:color/darker_gray"/>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:layout_marginStart="12dp">
-
-                                <TextView
-                                    android:id="@+id/tvNewsTitle1"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Palawan launches largest mangrove reforestation project"
-                                    android:textSize="14sp"
-                                    android:textColor="@color/text_dark"
-                                    android:textStyle="bold"
-                                    android:maxLines="3"
-                                    android:ellipsize="end"/>
-
-                                <TextView
-                                    android:id="@+id/tvNewsDesc1"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="The initiative aims to plant 1 million mangrove trees by 2025..."
-                                    android:textSize="12sp"
-                                    android:textColor="@color/text_secondary"
-                                    android:layout_marginTop="4dp"
-                                    android:maxLines="2"
-                                    android:ellipsize="end"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Read more"
-                                    android:textSize="12sp"
-                                    android:textColor="#88C057"
-                                    android:layout_marginTop="8dp"/>
-                            </LinearLayout>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="300dp"
-                            android:layout_height="wrap_content"
-                            android:minHeight="150dp"
-                            android:orientation="horizontal"
-                            android:background="@drawable/bg_card_hard_shadow"
-                            android:padding="16dp">
-
-                            <ImageView
-                                android:id="@+id/imgNews2"
-                                android:layout_width="80dp"
-                                android:layout_height="80dp"
-                                android:src="@drawable/img_solar_panel"
-                                android:scaleType="centerCrop"
-                                android:contentDescription="Solar Panel Thumbnail"
-                                android:background="@android:color/darker_gray"/>
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="vertical"
-                                android:layout_marginStart="12dp">
-
-                                <TextView
-                                    android:id="@+id/tvNewsTitle2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="PH aims for 35% renewable energy mix by 2030"
-                                    android:textSize="14sp"
-                                    android:textColor="@color/text_dark"
-                                    android:textStyle="bold"
-                                    android:maxLines="3"
-                                    android:ellipsize="end"/>
-
-                                <TextView
-                                    android:id="@+id/tvNewsDesc2"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Department of Energy pushes for new solar and wind farms..."
-                                    android:textSize="12sp"
-                                    android:textColor="@color/text_secondary"
-                                    android:layout_marginTop="4dp"
-                                    android:maxLines="2"
-                                    android:ellipsize="end"/>
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Read more"
-                                    android:textSize="12sp"
-                                    android:textColor="#88C057"
-                                    android:layout_marginTop="8dp"/>
-                            </LinearLayout>
-                        </LinearLayout>
-
-                    </LinearLayout>
-                </HorizontalScrollView>
+                    android:orientation="horizontal"
+                    android:clipToPadding="false"
+                    android:paddingEnd="16dp"/>
 
             </LinearLayout>
 

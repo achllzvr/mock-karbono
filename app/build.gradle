@@ -99,13 +99,22 @@ dependencies {
     annotationProcessor libs.compiler
 
     // TapTargetView for In-App Tutorial
-    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.13.3'
+    //noinspection UseTomlInstead
+    implementation 'com.getkeepsafe.taptargetview:taptargetview:1.15.0'
 
     implementation libs.androidx.constraintlayout.v214
     implementation libs.androidx.recyclerview
     implementation libs.androidx.coordinatorlayout
     implementation libs.androidx.viewpager2
     implementation libs.androidx.fragment
+
+    // Marketplace Dependencies
+    // Image Loading (Fixes freezing)
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+
+    // Swipe to Refresh
+    implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
 
     // Removed (01/24/26)
     // implementation libs.firebase.auth

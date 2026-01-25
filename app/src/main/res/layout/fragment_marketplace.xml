@@ -1,159 +1,40 @@
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/cream_background">
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:padding="16dp">
 
     <TextView
-        android:id="@+id/tvMarketplaceTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Marketplace"
         android:textSize="24sp"
-        android:textColor="@color/text_dark"
         android:textStyle="bold"
-        android:layout_marginTop="24dp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <LinearLayout
-        android:id="@+id/tabContainer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_margin="20dp"
-        android:layout_marginHorizontal="16dp"
-        android:padding="8dp"
-        android:background="@drawable/bg_tab_container"
-        app:layout_constraintTop_toBottomOf="@id/tvMarketplaceTitle">
-
-        <TextView
-            android:id="@+id/tabPlantTrees"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Plant Trees"
-            android:textSize="12sp"
-            android:textColor="@color/text_secondary"
-            android:gravity="center"
-            android:paddingVertical="10dp"
-            android:drawableStart="@drawable/ic_tree_line"
-            android:drawableTint="@color/text_secondary"
-            android:paddingStart="8dp"
-            android:drawablePadding="4dp" />
-
-        <TextView
-            android:id="@+id/tabAppliances"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Appliances"
-            android:textSize="12sp"
-            android:textColor="@color/text_secondary"
-            android:gravity="center"
-            android:paddingVertical="10dp"
-            android:drawableStart="@drawable/ic_appliance"
-            android:drawableTint="@color/text_secondary"
-            android:paddingStart="8dp"
-            android:drawablePadding="4dp"/>
-
-        <TextView
-            android:id="@+id/tabThrift"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Thrift Store"
-            android:textSize="12sp"
-            android:textColor="@color/text_secondary"
-            android:gravity="center"
-            android:paddingVertical="10dp"
-            android:drawableStart="@drawable/ic_shop"
-            android:drawableTint="@color/text_secondary"
-            android:paddingStart="8dp"
-            android:drawablePadding="4dp"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/llPartnerLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="12dp"
-        app:layout_constraintTop_toBottomOf="@id/tabContainer"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Tree Planting Partner: "
-            android:textSize="12sp"
-            android:textColor="@color/text_secondary"
-            android:textStyle="bold"/>
-
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="20dp"
-            android:src="@drawable/img_evertreen"
-            android:scaleType="centerCrop"
-            android:layout_marginStart="4dp"
-            android:contentDescription="Partner Logo"/>
-    </LinearLayout>
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerMarketplace"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="8dp"
-        android:clipToPadding="false"
-        android:paddingHorizontal="8dp"
-        android:paddingBottom="16dp"
-        app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
-        app:spanCount="2"
-        app:layout_constraintTop_toBottomOf="@id/llPartnerLabel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        tools:listitem="@layout/item_marketplace_grid" />
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/llPartnerLabel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:textColor="@color/black"
+        android:layout_marginBottom="4dp"/>
 
     <TextView
-        android:id="@+id/tvError"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Failed to load trees"
-        android:textColor="@color/coral"
-        android:textSize="14sp"
-        android:gravity="center"
-        android:visibility="gone"
-        android:layout_marginHorizontal="32dp"
-        app:layout_constraintTop_toBottomOf="@id/llPartnerLabel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
-
-    <TextView
-        android:id="@+id/tvEmpty"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="No trees found available to plant right now."
-        android:textColor="@color/text_secondary"
+        android:text="Support reforestation campaigns"
         android:textSize="14sp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/llPartnerLabel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        android:textColor="#757575"
+        android:layout_marginBottom="16dp"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerMarketplace"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp"/>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</LinearLayout>

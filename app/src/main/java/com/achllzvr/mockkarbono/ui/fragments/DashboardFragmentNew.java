@@ -27,15 +27,25 @@ import androidx.cardview.widget.CardView;
 import androidx.core.widget.ImageViewCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.achllzvr.mockkarbono.R;
+import com.achllzvr.mockkarbono.api.ApiClient;
+import com.achllzvr.mockkarbono.api.data.models.BlogPost;
 import com.achllzvr.mockkarbono.db.AppDatabase;
 import com.achllzvr.mockkarbono.db.entities.AppUsage;
 import com.achllzvr.mockkarbono.db.entities.NotificationEvent;
+import com.achllzvr.mockkarbono.ui.adapters.BlogAdapter;
 import com.achllzvr.mockkarbono.utils.PrefsManager;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.achllzvr.mockkarbono.utils.TutorialManager;
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -45,6 +55,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.Executors;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * New Dashboard Fragment - Soft Pop / Duolingo Style
@@ -98,6 +112,9 @@ public class DashboardFragmentNew extends Fragment {
     private PrefsManager prefsManager;
     private ScrollView dashboardScrollView;
 
+    private RecyclerView recyclerBlog;
+    private BlogAdapter blogAdapter;
+
     // Blinking handler
     private Handler blinkHandler = new Handler(Looper.getMainLooper());
     private Runnable blinkRunnable;
@@ -114,15 +131,20 @@ public class DashboardFragmentNew extends Fragment {
 
         prefsManager = new PrefsManager(requireContext());
 
-        // --- ADD THIS LINE TEMPORARILY ---
-        prefsManager.setDashboardTutorialSeen(false);
-        // ---------------------------------
-
         // Initialize Views (Ensure these IDs exist in your XML)
         mascotContainer = view.findViewById(R.id.mascotContainer);
         tvTodayCarbon = view.findViewById(R.id.tvTodayCarbon);
         cardSmartphone = view.findViewById(R.id.cardSmartphone);
         dashboardScrollView = view.findViewById(R.id.dashboardScrollView);
+        recyclerBlog = view.findViewById(R.id.recyclerBlog);
+
+        // Setup Blog Adapter
+        if (recyclerBlog != null) {
+            recyclerBlog.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+            blogAdapter = new BlogAdapter();
+            recyclerBlog.setAdapter(blogAdapter);
+            fetchNews();
+        }
 
         // Bind views
         bindViews(view);
@@ -134,6 +156,28 @@ public class DashboardFragmentNew extends Fragment {
         loadDashboardData();
 
         return view;
+    }
+
+    private void fetchNews() {
+        ApiClient.getService().getBlogPosts().enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    JsonObject body = response.body();
+                    if (body.has("data")) {
+                        JsonArray dataArray = body.getAsJsonArray("data");
+                        Type listType = new TypeToken<List<BlogPost>>(){}.getType();
+                        List<BlogPost> posts = new Gson().fromJson(dataArray, listType);
+                        if (posts != null) blogAdapter.setPosts(posts);
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+                // Silent fail for news
+            }
+        });
     }
 
     @Override
@@ -151,7 +195,7 @@ public class DashboardFragmentNew extends Fragment {
         if (getActivity() == null) return;
 
         new TutorialManager(getActivity())
-                .withScrollView(dashboardScrollView) // <--- CRITICAL UPDATE
+                .withScrollView(dashboardScrollView)
                 .addStep(mascotContainer,
                         "Your Eco-Companion",
                         "Karbo reacts to your habits! Tap here to see his status.")
@@ -198,27 +242,6 @@ public class DashboardFragmentNew extends Fragment {
             tvTopApp3 = view.findViewById(R.id.tvTopApp3);
             if (imgTopApp3 != null && imgTopApp3.getParent() instanceof View) {
                 rowApp3 = (View) imgTopApp3.getParent();
-            }
-        } catch (Exception ignored) {}
-
-        // --- Appliance Card Binding ---
-        cardAppliances = view.findViewById(R.id.cardAppliances);
-        try {
-            ViewGroup ca = (ViewGroup) cardAppliances;
-            rowAppliance1 = (ViewGroup) ca.getChildAt(1); // Row 1 Container
-            if (rowAppliance1 != null) {
-                tvTopAppliance1 = (TextView) rowAppliance1.getChildAt(0);
-                tvApplianceCarbonValue = (TextView) rowAppliance1.getChildAt(1);
-            }
-
-            rowAppliance2 = (ViewGroup) ca.getChildAt(3); // Row 2 Container
-            if (rowAppliance2 != null) {
-                tvTopAppliance2 = (TextView) rowAppliance2.getChildAt(0);
-            }
-
-            rowAppliance3 = (ViewGroup) ca.getChildAt(5); // Row 3 Container
-            if (rowAppliance3 != null) {
-                tvTopAppliance3 = (TextView) rowAppliance3.getChildAt(0);
             }
         } catch (Exception ignored) {}
 
