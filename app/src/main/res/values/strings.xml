@@ -23,6 +23,7 @@
     <string name="force_sync">Force Sync</string>
     <string name="view_details">View details</string>
     <string name="unsynced_items">Unsynced Items</string>
+    <string name="btn_contribute">Contribute</string>
 
     <!-- Track tabs -->
     <string name="tab_live">Live</string>

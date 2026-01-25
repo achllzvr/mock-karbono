@@ -3,6 +3,8 @@ package com.achllzvr.mockkarbono.ui.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +20,17 @@ import java.util.List;
 public class MarketplaceAdapter extends RecyclerView.Adapter<MarketplaceAdapter.ViewHolder> {
 
     private List<MarketplaceGoal> goals = new ArrayList<>();
+    private final OnItemClickListener listener; // Click listener interface
+
+    // Interface for click callback
+    public interface OnItemClickListener {
+        void onContributeClick(MarketplaceGoal goal);
+    }
+
+    // Constructor requires listener
+    public MarketplaceAdapter(OnItemClickListener listener) {
+        this.listener = listener;
+    }
 
     public void setGoals(List<MarketplaceGoal> newGoals) {
         this.goals = newGoals;
@@ -35,7 +48,7 @@ public class MarketplaceAdapter extends RecyclerView.Adapter<MarketplaceAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         MarketplaceGoal goal = goals.get(position);
-        holder.bind(goal);
+        holder.bind(goal, listener);
     }
 
     @Override
@@ -45,7 +58,8 @@ public class MarketplaceAdapter extends RecyclerView.Adapter<MarketplaceAdapter.
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle, tvPrice, tvImpact;
-        View imgCover; // Using View as placeholder or ImageView if you cast it
+        ImageView imgCover;
+        Button btnContribute; // The button
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -53,21 +67,20 @@ public class MarketplaceAdapter extends RecyclerView.Adapter<MarketplaceAdapter.
             tvPrice = itemView.findViewById(R.id.tvItemPrice);
             tvImpact = itemView.findViewById(R.id.tvItemImpact);
             imgCover = itemView.findViewById(R.id.imgItemCover);
+            btnContribute = itemView.findViewById(R.id.btnContribute);
         }
 
-        public void bind(MarketplaceGoal goal) {
+        public void bind(MarketplaceGoal goal, OnItemClickListener listener) {
             tvTitle.setText(goal.title);
-            String progressText = String.format("₱%.0f / ₱%.0f", goal.currentAmount, goal.targetAmount);
-            tvPrice.setText(progressText);
+            tvPrice.setText(String.format("₱%.0f / ₱%.0f", goal.currentAmount, goal.targetAmount));
             tvImpact.setText(goal.getProgressPercentage() + "% Funded");
 
-            // Glide Implementation
             if (goal.proofImageUrl != null && !goal.proofImageUrl.isEmpty()) {
-                // If imgCover is a View in XML (from previous steps), we can't load image easily unless we change XML to ImageView.
-                // Assuming you update XML to <ImageView id="@+id/imgItemCover" ... />
-                // OR if it's just a background placeholder for now:
-                // Glide will handle async loading if it was an ImageView
+                Glide.with(itemView.getContext()).load(goal.proofImageUrl).into(imgCover);
             }
+
+            // Bind Click
+            btnContribute.setOnClickListener(v -> listener.onContributeClick(goal));
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.achllzvr.mockkarbono.ui.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.achllzvr.mockkarbono.OnboardingActivity;
 import com.achllzvr.mockkarbono.R;
 import com.achllzvr.mockkarbono.api.ApiClient;
 import com.achllzvr.mockkarbono.api.data.models.MarketplaceGoal;
 import com.achllzvr.mockkarbono.ui.adapters.MarketplaceAdapter;
+import com.achllzvr.mockkarbono.utils.PrefsManager;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -46,7 +49,7 @@ public class MarketplaceFragment extends Fragment {
 
         // Setup Recycler
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-        adapter = new MarketplaceAdapter();
+        adapter = new MarketplaceAdapter(this::handleContribute);
         recyclerView.setAdapter(adapter);
 
         // Setup Refresh
@@ -56,6 +59,33 @@ public class MarketplaceFragment extends Fragment {
         fetchGoals();
 
         return view;
+    }
+
+    private void handleContribute(MarketplaceGoal goal) {
+        if (isGuest()) {
+            showLoginPrompt();
+        } else {
+            // Logic for logged-in users (e.g., Open payment dialog)
+            Toast.makeText(getContext(), "Contribute to: " + goal.title, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private boolean isGuest() {
+        com.achllzvr.mockkarbono.utils.PrefsManager prefs = new com.achllzvr.mockkarbono.utils.PrefsManager(getContext());
+        return prefs.getToken() == null || prefs.getToken().isEmpty();
+    }
+
+    private void showLoginPrompt() {
+        new androidx.appcompat.app.AlertDialog.Builder(getContext())
+                .setTitle("Login Required")
+                .setMessage("You need a Karbono account to contribute.")
+                .setPositiveButton("Log In", (dialog, which) -> {
+                    android.content.Intent intent = new android.content.Intent(getActivity(), com.achllzvr.mockkarbono.OnboardingActivity.class);
+                    intent.putExtra("force_login", true);
+                    startActivity(intent);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void fetchGoals() {
